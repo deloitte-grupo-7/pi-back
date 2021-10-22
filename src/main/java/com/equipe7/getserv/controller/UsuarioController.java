@@ -23,6 +23,7 @@ public class UsuarioController {
 	@PostMapping("/register")
 	public ResponseEntity<Usuario> post (@RequestBody Usuario user){
 		if (user.getCpf().matches("\\D")) {
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			//deve returnar uma erro de cpf inválido;
 		}
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(user));

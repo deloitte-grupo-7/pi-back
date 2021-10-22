@@ -39,7 +39,7 @@ public class Usuario {
 	
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-    private Date nascimento;
+    private Date nascimento = new java.sql.Date(System.currentTimeMillis());
 	
 	@NotNull
 	@Size(min = 3, max = 64)

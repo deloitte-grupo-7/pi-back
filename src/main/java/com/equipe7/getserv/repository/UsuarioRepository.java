@@ -12,6 +12,6 @@ import com.equipe7.getserv.model.Usuario;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long>{
 	
-	public List<Usuario> findAllbyNomeContainingIgnoreCase(Spring nome);
+//	public List<Usuario> findAllbyNomeContainingIgnoreCase(Spring nome);
 	
 }
