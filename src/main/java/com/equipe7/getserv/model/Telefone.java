@@ -22,16 +22,36 @@ public class Telefone {
 	@ManyToOne
 	@JsonIgnoreProperties({"telefones", "enderecos"})
     private Usuario usuario;
-		
-	@NotNull
-	@Size(min =8, max=16)
-    private String celular;
 
 	@NotNull
-	@Size(min =8, max=16)
+	@Size(min = 8, max = 9)
     private String telefone;
 
-    public Telefone(){
+	@NotNull
+	@Size(min = 1, max = 4)
+	private String ddd;
+
+	@NotNull
+	@Size(min = 1, max = 3)
+	private String ddi;
+
+	public String getDdd() {
+		return ddd;
+	}
+
+	public void setDdd(String ddd) {
+		this.ddd = ddd;
+	}
+
+	public String getDdi() {
+		return ddi;
+	}
+
+	public void setDdi(String ddi) {
+		this.ddi = ddi;
+	}
+
+	public Telefone(){
 
     }
 
@@ -49,14 +69,6 @@ public class Telefone {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
-	}
-
-	public String getCelular() {
-		return celular;
-	}
-
-	public void setCelular(String celular) {
-		this.celular = celular;
 	}
 
 	public String getTelefone() {

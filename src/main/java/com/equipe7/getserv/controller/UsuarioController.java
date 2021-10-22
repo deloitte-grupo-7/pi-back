@@ -1,5 +1,6 @@
 package com.equipe7.getserv.controller;
 
+import com.equipe7.getserv.model.Telefone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,15 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         } if (!user.getEmail().matches("^(.+)@(.+)$")) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        } if(!user.getUsername().matches("[a-zA-Z\\d]+")){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        }
+
+        for (Telefone telefone:user.getTelefones()){
+
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
