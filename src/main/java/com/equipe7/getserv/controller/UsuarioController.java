@@ -22,13 +22,12 @@ public class UsuarioController {
 	
 	@PostMapping("/register")
 	public ResponseEntity<Usuario> post (@RequestBody Usuario user){
-		if (user.getCpf().matches("\\D")) {
+		if (!user.getCpf().matches("\\d+")) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 			//deve returnar uma erro de cpf inválido;
+		} if (!user.getNome().matches("[a-zA-ZÀ-ú\\s]+")){
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(user));
     }
-	
-	
-
 }
