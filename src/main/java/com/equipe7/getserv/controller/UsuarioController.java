@@ -16,18 +16,22 @@ import com.equipe7.getserv.repository.UsuarioRepository;
 @RequestMapping
 @CrossOrigin(value = "*", allowedHeaders = "*")
 public class UsuarioController {
-	//kutebrowser
-	@Autowired
-	private UsuarioRepository repository;
-	
-	@PostMapping("/register")
-	public ResponseEntity<Usuario> post (@RequestBody Usuario user){
-		if (!user.getCpf().matches("\\d+")) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-			//deve returnar uma erro de cpf inválido;
-		} if (!user.getNome().matches("[a-zA-ZÀ-ú\\s]+")){
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+    //kutebrowser
+    @Autowired
+    private UsuarioRepository repository;
+
+    @PostMapping("/register")
+    public ResponseEntity<Usuario> post(@RequestBody Usuario user) {
+        if (!user.getCpf().matches("\\d+")) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        } if (!user.getNome().matches("[a-zA-ZÀ-ú\\s]+")) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        } if (!user.getEmail().matches("^(.+)@(.+)$")) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
         return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(user));
     }
 }
