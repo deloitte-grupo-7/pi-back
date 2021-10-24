@@ -22,6 +22,9 @@ public class Endereco {
 	@ManyToOne
 	@JsonIgnoreProperties({"enderecos", "telefones"})
     private Usuario usuario;
+
+	@Size(min = 1, max = 64)
+	private String complemento;
 	
 	@NotNull
 	@Size(min = 1, max = 128)
@@ -114,4 +117,11 @@ public class Endereco {
 		this.cep = cep;
 	}
 
+	public String getComplemento() {
+		return complemento;
+	}
+
+	public void setComplemento(String complemento) {
+		this.complemento = complemento;
+	}
 }
