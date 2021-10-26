@@ -1,9 +1,11 @@
 package com.equipe7.getserv.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -30,11 +32,13 @@ public class Usuario {
     private String nome;
 	
 	@NotNull
+	@Column(unique = true)
 	@Size(min = 11, max=11)
     private String cpf;
 
 	@NotNull
-	@Size(min = 8, max=65)
+	@Column(unique = true)
+	@Size(min = 8, max=64)
     private String email;
 	
 	@NotNull
@@ -42,7 +46,8 @@ public class Usuario {
     private Date nascimento = new java.sql.Date(System.currentTimeMillis());
 	
 	@NotNull
-	@Size(min = 3, max = 64)
+	@Column(unique = true)
+	@Size(min = 3, max = 32)
     private String username;
 
 	@NotNull
@@ -52,11 +57,11 @@ public class Usuario {
 
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("usuario")
-	private List<Telefone> telefones;
+	private List<Telefone> telefones = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("usuario")
-	private List<Endereco> enderecos;
+	private List<Endereco> enderecos = new ArrayList<>();
 
     public Usuario(){
 

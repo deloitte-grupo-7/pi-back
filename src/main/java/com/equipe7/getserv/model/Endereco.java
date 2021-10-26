@@ -6,7 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -22,34 +21,28 @@ public class Endereco {
 	@ManyToOne
 	@JsonIgnoreProperties({"enderecos", "telefones"})
     private Usuario usuario;
-
-	@Size(min = 1, max = 64)
-	private String complemento;
 	
-	@NotNull
 	@Size(min = 1, max = 128)
 	private String rua;
 	
-	@NotNull
 	@Size(min = 1, max = 8)
 	private String numero;
 	
-	@NotNull
 	@Size(min = 1, max = 64)
 	private String bairro;
 	
-	@NotNull
 	@Size(min = 1, max = 64)
 	private String cidade;
 	
-	@NotNull
 	@Size(min = 1, max = 32)
 	private String estado;
 	
-	@NotNull
 	@Size(min = 6, max = 9)
 	private String cep;
 
+	@Size(min = 1, max = 128)
+	private String complemento;
+	
     public Endereco (){    	
     }
 
@@ -59,14 +52,6 @@ public class Endereco {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Usuario getUsuario() {
-		return usuario;
-	}
-
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
 	}
 
 	public String getRua() {
@@ -123,5 +108,13 @@ public class Endereco {
 
 	public void setComplemento(String complemento) {
 		this.complemento = complemento;
+	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 }

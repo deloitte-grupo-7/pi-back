@@ -6,7 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -22,34 +21,15 @@ public class Telefone {
 	@ManyToOne
 	@JsonIgnoreProperties({"telefones", "enderecos"})
     private Usuario usuario;
+	
+	@Size(min = 7, max = 12)
+    private String numero;
 
-	@NotNull
-	@Size(min = 8, max = 9)
-    private String telefone;
-
-	@NotNull
-	@Size(min = 1, max = 4)
-	private String ddd;
-
-	@NotNull
 	@Size(min = 1, max = 3)
 	private String ddi;
-
-	public String getDdd() {
-		return ddd;
-	}
-
-	public void setDdd(String ddd) {
-		this.ddd = ddd;
-	}
-
-	public String getDdi() {
-		return ddi;
-	}
-
-	public void setDdi(String ddi) {
-		this.ddi = ddi;
-	}
+	
+	@Size(min = 1, max = 4)
+	private String ddd;
 
 	public Telefone(){
 
@@ -62,6 +42,30 @@ public class Telefone {
 	public void setId(Long id) {
 		this.id = id;
 	}
+	
+	public String getDdi() {
+		return ddi;
+	}
+
+	public void setDdi(String ddi) {
+		this.ddi = ddi;
+	}
+
+	public String getDdd() {
+		return ddd;
+	}
+
+	public void setDdd(String ddd) {
+		this.ddd = ddd;
+	}
+
+	public String getNumero() {
+		return numero;
+	}
+
+	public void setNumero(String numero) {
+		this.numero = numero;
+	}
 
 	public Usuario getUsuario() {
 		return usuario;
@@ -69,14 +73,6 @@ public class Telefone {
 
 	public void setUsuario(Usuario usuario) {
 		this.usuario = usuario;
-	}
-
-	public String getTelefone() {
-		return telefone;
-	}
-
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
 	}
     
 }
