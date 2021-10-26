@@ -39,9 +39,7 @@ public class UsuarioController {
 
 	@PostMapping("/register")
 	public ResponseEntity<?> postUsuario(@RequestBody Usuario user) {
-		if (user.getPassword() == user.getPassconf())
-			user.setPassconf("confirmed");
-		else return ResponseEntity.badRequest().body("Senhas não coinci");
+		user.setPassconf("confirmed");
 		List<String> errors = validateUser(user);
 		if (errors.size() > 0)
 			return ResponseEntity.badRequest().body(errors);
