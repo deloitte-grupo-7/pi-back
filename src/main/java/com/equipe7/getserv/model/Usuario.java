@@ -54,7 +54,7 @@ public class Usuario {
 	@Size(min = 8, max = 128)
     private String password;
 
-	@Size(min = 3, max = 32)
+	@Size(min = 8, max = 128)
     private String passconf;
 	
 
@@ -129,6 +129,14 @@ public class Usuario {
 		this.password = password;
 	}
 
+	public String getPassconf() {
+		return passconf;
+	}
+
+	public void setPassconf(String passconf) {
+		this.passconf = passconf;
+	}
+
 	public List<Telefone> getPhoneNumbers() {
 		return phoneNumbers;
 	}
@@ -143,14 +151,6 @@ public class Usuario {
 
 	public void setAddresses(List<Endereco> addresses) {
 		this.addresses = addresses;
-	}
-
-	public String getPassconf() {
-		return passconf;
-	}
-
-	public void setPassconf(String passconf) {
-		this.passconf = passconf;
 	}
     
 }
