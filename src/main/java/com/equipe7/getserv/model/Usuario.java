@@ -29,8 +29,8 @@ public class Usuario {
 	
 	@NotNull
 	@Size(min = 1, max=128)
-    private String nome;
-	
+    private String name;
+
 	@NotNull
 	@Column(unique = true)
 	@Size(min = 11, max=11)
@@ -43,7 +43,7 @@ public class Usuario {
 	
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
-    private Date nascimento = new java.sql.Date(System.currentTimeMillis());
+    private Date birthday = new java.sql.Date(System.currentTimeMillis());
 	
 	@NotNull
 	@Column(unique = true)
@@ -52,16 +52,19 @@ public class Usuario {
 
 	@NotNull
 	@Size(min = 8, max = 128)
-    private String senha;
+    private String password;
+
+	@Size(min = 3, max = 32)
+    private String passconf;
 	
 
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("usuario")
-	private List<Telefone> telefones = new ArrayList<>();
+	private List<Telefone> phoneNumbers = new ArrayList<>();
 	
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("usuario")
-	private List<Endereco> enderecos = new ArrayList<>();
+	private List<Endereco> addresses = new ArrayList<>();
 
     public Usuario(){
 
@@ -75,12 +78,13 @@ public class Usuario {
 		this.id = id;
 	}
 
-	public String getNome() {
-		return nome;
+	public String getName() {
+		setName(this.name);
+		return name;
 	}
 
-	public void setNome(String nome) {
-		this.nome = nome;
+	public void setName(String name) {
+		this.name = name.toUpperCase();
 	}
 
 	public String getCpf() {
@@ -92,51 +96,61 @@ public class Usuario {
 	}
 
 	public String getEmail() {
+		setEmail(this.email);
 		return email;
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+		this.email = email.toLowerCase();
 	}
 
-	public Date getNascimento() {
-		return nascimento;
+	public Date getBirthday() {
+		return birthday;
 	}
 
-	public void setNascimento(Date nascimento) {
-		this.nascimento = nascimento;
+	public void setBirthday(Date birthday) {
+		this.birthday = birthday;
 	}
 
 	public String getUsername() {
+		setUsername(this.username);
 		return username;
 	}
 
 	public void setUsername(String username) {
-		this.username = username;
+		this.username = username.toLowerCase();
 	}
 
-	public String getSenha() {
-		return senha;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setSenha(String senha) {
-		this.senha = senha;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
-	public List<Telefone> getTelefones() {
-		return telefones;
+	public List<Telefone> getPhoneNumbers() {
+		return phoneNumbers;
 	}
 
-	public void setTelefones(List<Telefone> telefones) {
-		this.telefones = telefones;
+	public void setPhoneNumbers(List<Telefone> phoneNumbers) {
+		this.phoneNumbers = phoneNumbers;
 	}
 
-	public List<Endereco> getEnderecos() {
-		return enderecos;
+	public List<Endereco> getAddresses() {
+		return addresses;
 	}
 
-	public void setEnderecos(List<Endereco> enderecos) {
-		this.enderecos = enderecos;
+	public void setAddresses(List<Endereco> addresses) {
+		this.addresses = addresses;
+	}
+
+	public String getPassconf() {
+		return passconf;
+	}
+
+	public void setPassconf(String passconf) {
+		this.passconf = passconf;
 	}
     
 }

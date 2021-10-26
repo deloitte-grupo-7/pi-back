@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -22,21 +23,26 @@ public class Endereco {
 	@JsonIgnoreProperties({"enderecos", "telefones"})
     private Usuario usuario;
 	
+	@NotNull
 	@Size(min = 1, max = 128)
 	private String rua;
 	
+	@NotNull
 	@Size(min = 1, max = 8)
 	private String numero;
 	
 	@Size(min = 1, max = 64)
 	private String bairro;
 	
+	@NotNull
 	@Size(min = 1, max = 64)
 	private String cidade;
 	
+	@NotNull
 	@Size(min = 1, max = 32)
 	private String estado;
 	
+	@NotNull
 	@Size(min = 6, max = 9)
 	private String cep;
 
@@ -55,11 +61,12 @@ public class Endereco {
 	}
 
 	public String getRua() {
+		setRua(this.rua);
 		return rua;
 	}
 
 	public void setRua(String rua) {
-		this.rua = rua;
+		this.rua = rua.toUpperCase();
 	}
 
 	public String getNumero() {
@@ -71,27 +78,30 @@ public class Endereco {
 	}
 
 	public String getBairro() {
+		setBairro(this.bairro);
 		return bairro;
 	}
 
 	public void setBairro(String bairro) {
-		this.bairro = bairro;
+		this.bairro = bairro.toUpperCase();
 	}
 
 	public String getCidade() {
+		setCidade(this.cidade);
 		return cidade;
 	}
 
 	public void setCidade(String cidade) {
-		this.cidade = cidade;
+		this.cidade = cidade.toUpperCase();
 	}
 
 	public String getEstado() {
+		setEstado(this.estado);
 		return estado;
 	}
 
 	public void setEstado(String estado) {
-		this.estado = estado;
+		this.estado = estado.toUpperCase();
 	}
 
 	public String getCep() {

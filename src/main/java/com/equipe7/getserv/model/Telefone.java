@@ -6,6 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -22,14 +23,17 @@ public class Telefone {
 	@JsonIgnoreProperties({"telefones", "enderecos"})
     private Usuario usuario;
 	
-	@Size(min = 7, max = 12)
-    private String numero;
-
+	@NotNull
 	@Size(min = 1, max = 3)
-	private String ddi;
+	private String ddi = "55";
 	
+	@NotNull
 	@Size(min = 1, max = 4)
 	private String ddd;
+	
+	@NotNull
+	@Size(min = 7, max = 12)
+    private String numero;
 
 	public Telefone(){
 
