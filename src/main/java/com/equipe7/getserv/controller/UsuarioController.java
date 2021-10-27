@@ -46,7 +46,6 @@ public class UsuarioController {
 
 	@PostMapping("/register")
 	public ResponseEntity<?> postUsuario(@RequestBody Usuario user) {
-		user.setPassconf("confirmed");
 		List<String> errors = validateUser(user);
 		if (errors.size() > 0)
 			return ResponseEntity.badRequest().body(errors);
@@ -73,6 +72,22 @@ public class UsuarioController {
 	
 	@PostMapping("/register/{id}/telefones")
 	public ResponseEntity<?> postTelefones(@RequestBody List<Telefone> telefones, @PathVariable Long id) {
+		Usuario user = repository.findById(id).orElse(new Usuario());
+		if (user.getId() == null)
+			return ResponseEntity.badRequest().body("Usuário Invalido");
+		
+		user.setPhoneNumbers(telefones);
+		for (int i = 0; telefones.size() > i; i++) {
+			List<String> errors = validateTel(telefones.get(i));
+			if (errors.size() > 0)
+				return ResponseEntity.badRequest().body(errors);
+		}
+		user.getPhoneNumbers().forEach(tel -> tel.setUsuario(user));
+		return ResponseEntity.ok().body(repository.save(user));
+	}
+	
+	@PostMapping("/login")
+	public ResponseEntity<String> postTelefones(@RequestBody Usuario user) {
 		Usuario user = repository.findById(id).orElse(new Usuario());
 		if (user.getId() == null)
 			return ResponseEntity.badRequest().body("Usuário Invalido");
