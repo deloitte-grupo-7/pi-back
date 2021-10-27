@@ -36,6 +36,13 @@ public class UsuarioController {
 	public ResponseEntity<List<Usuario>> getAllUsers(){
 		return ResponseEntity.ok(repository.findAll());
 	}
+	
+	@GetMapping("/u/{id}")
+	public ResponseEntity<Usuario> getByUsername(@PathVariable Long id){
+		return repository.findById(id)
+				.map(resp -> ResponseEntity.ok(resp))
+				.orElse(ResponseEntity.notFound().build());
+	}
 
 	@PostMapping("/register")
 	public ResponseEntity<?> postUsuario(@RequestBody Usuario user) {
@@ -60,6 +67,7 @@ public class UsuarioController {
 			if (errors.size() > 0)
 				return ResponseEntity.badRequest().body(errors);
 		}
+		user.getAddresses().forEach(cep -> cep.setUsuario(user));
 		return ResponseEntity.ok().body(repository.save(user));
 	}
 	
@@ -75,6 +83,7 @@ public class UsuarioController {
 			if (errors.size() > 0)
 				return ResponseEntity.badRequest().body(errors);
 		}
+		user.getPhoneNumbers().forEach(tel -> tel.setUsuario(user));
 		return ResponseEntity.ok().body(repository.save(user));
 	}
 	
