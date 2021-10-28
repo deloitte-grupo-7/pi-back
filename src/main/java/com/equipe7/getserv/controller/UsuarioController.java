@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -32,7 +33,70 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioRepository repository;
 	
-	@GetMapping("/users")
+	@GetMapping("/u")
+	public Usuario getUser() {
+		return new Usuario();
+	}
+	/*
+	@PutMapping("/test/{id}")
+	public ResponseEntity<?> test(@RequestBody Usuario user, @PathVariable Long id){
+		Usuario oldUser = repository.findById(id).orElse(new Usuario());
+		if (oldUser.getId() == null)
+			return ResponseEntity.badRequest().body("Usuário Invalido");
+		
+		return ResponseEntity.ok().body(repository.save(updateTest(oldUser, user)));
+	}
+	
+	private String update(String oldUser, String newUser) {
+		if (oldUser != newUser || newUser != null)
+			return newUser;
+		return oldUser;
+	}
+	
+	private Usuario updateTest(Usuario o, Usuario n) {
+		o.setName(update(o.getName(), n.getName()));
+		o.setCpf(update(o.getCpf(), n.getCpf()));
+		o.setEmail(update(o.getEmail(), n.getEmail()));
+		o.setPassword(update(o.getPassword(), n.getPassword()));
+		o.setUsername(update(o.getUsername(), n.getUsername()));
+		
+		for (int i = 0; i < o.getPhoneNumbers().size(); i++) {
+			o.getPhoneNumbers().get(i).setDdi(
+					n.getPhoneNumbers().get(i).getDdi());
+			o.getPhoneNumbers().get(i).setDdd(
+					n.getPhoneNumbers().get(i).getDdd());
+			o.getPhoneNumbers().get(i).setNumero(
+					n.getPhoneNumbers().get(i).getNumero());
+		}
+		
+		for (int i = 0; i < o.getAddresses().size(); i++) {
+			o.getAddresses().get(i).setBairro(
+					n.getAddresses().get(i)
+					.getBairro());
+			o.getAddresses().get(i).setCep(
+					n.getAddresses().get(i)
+					.getCep());
+			o.getAddresses().get(i).setCidade(
+					n.getAddresses().get(i)
+					.getCidade());
+			o.getAddresses().get(i).setComplemento(
+					n.getAddresses().get(i)
+					.getComplemento());
+			o.getAddresses().get(i).setEstado(
+					n.getAddresses().get(i)
+					.getEstado());
+			o.getAddresses().get(i).setNumero(
+					n.getAddresses().get(i)
+					.getNumero());
+			o.getAddresses().get(i).setRua(
+					n.getAddresses().get(i)
+					.getRua());
+		}
+		
+		return o;
+	}*/
+	
+	@GetMapping("/all/users")
 	public ResponseEntity<List<Usuario>> getAllUsers(){
 		return ResponseEntity.ok(repository.findAll());
 	}
@@ -46,13 +110,12 @@ public class UsuarioController {
 
 	@PostMapping("/register")
 	public ResponseEntity<?> postUsuario(@RequestBody Usuario user) {
-		user.setPassconf("confirmed");
 		List<String> errors = validateUser(user);
 		if (errors.size() > 0)
 			return ResponseEntity.badRequest().body(errors);
 		user.setPhoneNumbers(user.getPhoneNumbers());
 		user.setAddresses(user.getAddresses());
-		return ResponseEntity.status(HttpStatus.CREATED).body(repository.save(user));
+		return ResponseEntity.ok().body(repository.save(user));
 	}
 	
 	@PostMapping("/register/{id}/enderecos")

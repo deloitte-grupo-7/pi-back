@@ -29,17 +29,17 @@ public class Usuario {
 	
 	@NotNull
 	@Size(min = 1, max=128)
-    private String name;
+    private String name = "";
 
 	@NotNull
 	@Column(unique = true)
 	@Size(min = 11, max=11)
-    private String cpf;
+    private String cpf = "";
 
 	@NotNull
 	@Column(unique = true)
 	@Size(min = 8, max=64)
-    private String email;
+    private String email = "";
 	
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
@@ -48,14 +48,13 @@ public class Usuario {
 	@NotNull
 	@Column(unique = true)
 	@Size(min = 3, max = 32)
-    private String username;
+    private String username = "";
 
 	@NotNull
 	@Size(min = 8, max = 128)
-    private String password;
-
-	@Size(min = 8, max = 128)
-    private String passconf;
+    private String password = "";
+	
+    private String passconf = "";
 	
 
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
@@ -128,13 +127,9 @@ public class Usuario {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public String getPassconf() {
-		return passconf;
-	}
-
+	
 	public void setPassconf(String passconf) {
-		this.passconf = passconf;
+		
 	}
 
 	public List<Telefone> getPhoneNumbers() {
