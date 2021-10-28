@@ -7,13 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.equipe7.getserv.model.Endereco;
 import com.equipe7.getserv.model.Telefone;
@@ -85,6 +79,16 @@ public class UsuarioController {
 		}
 		user.getPhoneNumbers().forEach(tel -> tel.setUsuario(user));
 		return ResponseEntity.ok().body(repository.save(user));
+	}
+
+	@DeleteMapping("/register/id/{id}")
+	public ResponseEntity delete(@PathVariable Long id){
+		if(repository.existsById(id)){
+			repository.deleteById(id);
+			return ResponseEntity.ok().build();
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
 	
 	private List<String> validateUser(Usuario user) {
