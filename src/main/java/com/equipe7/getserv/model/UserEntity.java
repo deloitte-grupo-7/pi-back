@@ -3,6 +3,7 @@ package com.equipe7.getserv.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -22,7 +23,8 @@ public class UserEntity {
 	private Long id;
 	
 	@NotNull
-	@Size(max = 32)
+	@Size(max = 31)
+	@Column(unique = true)
 	private String username;
 	
 	@NotNull
@@ -34,7 +36,6 @@ public class UserEntity {
 	public UserEntity() {
 		super();
 		this.id = null;
-		// TODO Auto-generated constructor stub
 	}
 
 	public UserEntity(Long id, String username, String password, Collection<RoleEntity> roles) {
@@ -58,7 +59,7 @@ public class UserEntity {
 	}
 
 	public void setUsername(String username) {
-		this.username = username;
+		this.username = username.toLowerCase();
 	}
 
 	public String getPassword() {
