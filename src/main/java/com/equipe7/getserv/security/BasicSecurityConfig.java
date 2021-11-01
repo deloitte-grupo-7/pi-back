@@ -32,11 +32,11 @@ public class BasicSecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		UserAuthenticationFilter userAuthenticationFilter = new UserAuthenticationFilter(authenticationManagerBean());
-		userAuthenticationFilter.setFilterProcessesUrl("/post/login");
+		userAuthenticationFilter.setFilterProcessesUrl("/login");
 		http.csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.authorizeRequests().antMatchers("/post/login/**", "/post/token/refresh/**").permitAll();
-		http.authorizeRequests().antMatchers(HttpMethod.GET, "/get/user/**").hasAuthority("ROLE_USER");
+		http.authorizeRequests().antMatchers("/login/**", "/token/refresh/**").permitAll();
+		http.authorizeRequests().antMatchers(HttpMethod.GET, "/get/users/**").hasAuthority("ROLE_USER");
 		http.authorizeRequests().anyRequest().authenticated();
 		http.addFilter(userAuthenticationFilter);
 		http.addFilterBefore(new UserAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -53,13 +53,13 @@ public class UserAuthenticationFilter  extends UsernamePasswordAuthenticationFil
 
 		String refresh_token = JWT.create()
 				.withSubject(user.getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis() + 31 * 1440 * 60 * 1000))
+				.withExpiresAt(new Date(System.currentTimeMillis() + 14 * (24 * 60 * 60 * 1000)))
 				.withIssuer(request.getRequestURL().toString())
 				.sign(algorithm);
 		
 		Map<String, String> tokens = new HashMap<>();
-		tokens.put("access_token", access_token);
-		tokens.put("refresh_token", refresh_token);
+		tokens.put("access_token", "Basic " + access_token);
+		tokens.put("refresh_token", "Basic " + refresh_token);
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 	}
