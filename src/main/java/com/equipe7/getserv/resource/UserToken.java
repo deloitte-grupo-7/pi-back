@@ -13,37 +13,39 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.equipe7.getserv.model.RoleEntity;
 import com.equipe7.getserv.model.UserEntity;
 
-public abstract class UserTokens {
+public abstract class UserToken {
 
-	public static final String SECRET = "easteregg";
+	public static final String KEY = "KuxTWb@90NoSx7eo";
+	public static final String START = "Bearer ";
+	public static final Algorithm ALGORITHM = Algorithm.HMAC256(UserToken.KEY.getBytes()); 
 	
-	public static String createAccessTokenPrincipal(User user, Algorithm algorithm, HttpServletRequest request, long exp) {
-		return JWT.create()
+	public static String createAccessToken(User user, HttpServletRequest request, long exp) {
+		return START + JWT.create()
 				.withSubject(user.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis() + exp))
 				.withIssuer(request.getRequestURL().toString())
 				.withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-				.sign(algorithm);
+				.sign(ALGORITHM);
 	}
 	
-	public static String createAccessTokenUser(UserEntity user, Algorithm algorithm, HttpServletRequest request, long exp) {
-		return JWT.create()
+	public static String recreateAccessToken(UserEntity user, HttpServletRequest request, long exp) {
+		return START + JWT.create()
 				.withSubject(user.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis() + exp))
 				.withIssuer(request.getRequestURL().toString())
 				.withClaim("roles", user.getRoles().stream().map(RoleEntity::getName).collect(Collectors.toList()))
-				.sign(algorithm);
+				.sign(ALGORITHM);
 	}
 	
-	public static String createRefreshTokenPrincipal(User user, Algorithm algorithm, HttpServletRequest request, long exp) {
-		return JWT.create()
+	public static String createRefreshToken(User user, HttpServletRequest request, long exp) {
+		return START + JWT.create()
 				.withSubject(user.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis() + exp))
 				.withIssuer(request.getRequestURL().toString())
-				.sign(algorithm);
+				.sign(ALGORITHM);
 	}
 	
-	String createRefreshTokenUser(UserEntity user, Algorithm algorithm, HttpServletRequest request, long exp) {
+	public static String recreateRefreshToken(UserEntity user, Algorithm algorithm, HttpServletRequest request, long exp) {
 		return null;
 	}
 	

@@ -32,7 +32,7 @@ import com.equipe7.getserv.model.RegisterEntity;
 import com.equipe7.getserv.model.RoleEntity;
 import com.equipe7.getserv.model.UserEntity;
 import com.equipe7.getserv.repository.RoleRepository;
-import com.equipe7.getserv.resource.UserTokens;
+import com.equipe7.getserv.resource.UserToken;
 import com.equipe7.getserv.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -71,10 +71,10 @@ public class UserController {
 		return postUser(user);
 	}
 
-	/*@GetMapping("/get/users")
+	@GetMapping("/users")
 	public ResponseEntity<List<UserEntity>> getUsers(){
 		return ResponseEntity.ok().body(userService.getUsers());
-	}*/
+	}
 
 	@PostMapping("/post/user")
 	public ResponseEntity<UserEntity> postUser(UserEntity user){
@@ -95,20 +95,18 @@ public class UserController {
 	@GetMapping("/token/refresh")
 	public void refresh(HttpServletRequest request, HttpServletResponse response) throws IOException{
 		String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-		if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+		if (authorizationHeader != null && authorizationHeader.startsWith(UserToken.START)) {
 			try {
-				String refresh_token = authorizationHeader.substring("Bearer ".length());
-				Algorithm algorithm = Algorithm.HMAC256("easteregg".getBytes());
-				JWTVerifier varifier = JWT.require(algorithm).build();
+				String refresh_token = authorizationHeader.substring(UserToken.START.length());
+				JWTVerifier varifier = JWT.require(UserToken.ALGORITHM).build();
 				DecodedJWT decodedJWT = varifier.verify(refresh_token);
 				String username = decodedJWT.getSubject();
 				UserEntity user = userService.getUser(username);
-
-				String access_token = UserTokens.createAccessTokenUser(user, algorithm, request, 90l * 60l * 1000l);
+				String access_token = UserToken.recreateAccessToken(user, request, 90l * 60000l);
 				
 				Map<String, String> tokens = new HashMap<>();
-				tokens.put("access_token", "Bearer " + access_token);
-				tokens.put("refresh_token", "Bearer " + refresh_token);
+				tokens.put("access_token", access_token);
+				tokens.put("refresh_token", UserToken.START + refresh_token);
 				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 				new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 			} catch (Exception exception) {

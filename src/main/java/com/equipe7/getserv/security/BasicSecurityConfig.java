@@ -37,9 +37,9 @@ public class BasicSecurityConfig extends WebSecurityConfigurerAdapter{
 		userAuthenticationFilter.setFilterProcessesUrl("/signin");
 		http.csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.authorizeRequests().antMatchers("/signin/**", "/token/refresh/**", "/singup/**").permitAll();
-		http.authorizeRequests().antMatchers(HttpMethod.GET, "/get/users/**").hasAuthority("ROLE_USER");
-		http.authorizeRequests().anyRequest().permitAll();
+		http.authorizeRequests().antMatchers("/signup/**", "/signin/**", "/token/refresh/**").permitAll();
+		//http.authorizeRequests().antMatchers("/users/**").authenticated();
+		http.authorizeRequests().anyRequest().authenticated();
 		http.addFilter(userAuthenticationFilter);
 		http.addFilterBefore(new UserAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
