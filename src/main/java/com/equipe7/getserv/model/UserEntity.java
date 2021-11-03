@@ -18,6 +18,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_user")
@@ -38,7 +39,7 @@ public class UserEntity {
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<RoleEntity> roles = new ArrayList<>();
 	
-	@JsonIgnore
+	@JsonIgnoreProperties({"user", "user_id"})
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
 	private RegisterEntity register;
 

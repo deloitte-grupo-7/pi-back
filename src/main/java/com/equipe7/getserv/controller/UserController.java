@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,6 +37,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("")
+@CrossOrigin(value = "*", allowedHeaders = "*")
 public class UserController {
 	
 	private final UserService userService;
@@ -47,13 +49,12 @@ public class UserController {
 		this.userService = userService;
 	}
 	
-	@PostMapping("/registerTest")
+	@PostMapping("/register")
 	public ResponseEntity<?> registerAUser(@RequestBody SignUpForm form){
 		UserEntity user = new UserEntity();
 		user.setUsername(form.getUsername());
 		user.setPassword(form.getPassword());
 		
-		//RoleRepository a = new RoleRepository();
 		user.getRoles().add(repository.findByName("ROLE_USER"));
 		
 		RegisterEntity register = new RegisterEntity();
@@ -69,20 +70,20 @@ public class UserController {
 		return postUser(user);
 	}
 
-	@GetMapping("/get/users")
+	/*@GetMapping("/get/users")
 	public ResponseEntity<List<UserEntity>> getUsers(){
 		return ResponseEntity.ok().body(userService.getUsers());
-	}
+	}*/
 
 	@PostMapping("/post/user")
 	public ResponseEntity<UserEntity> postUser(UserEntity user){
-		return ResponseEntity.created(null).body(userService.createUser(user));
+		return ResponseEntity.created(null).body(userService.saveUser(user));
 	}
 
-	@PostMapping("/post/role")
+	/*@PostMapping("/post/role")
 	public ResponseEntity<RoleEntity> postUser(RoleEntity role){
 		return ResponseEntity.created(null).body(userService.createRole(role));
-	}
+	}*/
 
 	@PostMapping("/post/addrole")
 	public ResponseEntity<?> postToUser(RoleToUserForm form){

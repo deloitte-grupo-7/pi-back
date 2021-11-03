@@ -6,10 +6,12 @@ import com.equipe7.getserv.model.RoleEntity;
 import com.equipe7.getserv.model.UserEntity;
 
 public interface UserService {
-	UserEntity createUser(UserEntity user);
-	RoleEntity createRole(RoleEntity role);
+	UserEntity saveUser(UserEntity user);
+	//RoleEntity createRole(RoleEntity role);
 	
 	void addRoleToUser(String username, String roleName);
 	UserEntity getUser(String username);
-	List<UserEntity> getUsers();
+	//List<UserEntity> getUsers();
+	
+//	String create
 }
