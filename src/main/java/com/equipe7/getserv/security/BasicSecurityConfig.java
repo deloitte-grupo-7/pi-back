@@ -35,7 +35,7 @@ public class BasicSecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		UserAuthenticationFilter userAuthenticationFilter = new UserAuthenticationFilter(authenticationManagerBean());
 		userAuthenticationFilter.setFilterProcessesUrl("/signin");
-		http.csrf().disable();
+		http.csrf().disable().cors();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.authorizeRequests().antMatchers("/signup/**", "/signin/**", "/token/refresh/**").permitAll();
 		//http.authorizeRequests().antMatchers("/users/**").authenticated();
