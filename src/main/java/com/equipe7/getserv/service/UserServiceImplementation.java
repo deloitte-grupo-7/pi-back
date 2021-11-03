@@ -42,15 +42,15 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 	}
 
 	@Override
-	public UserEntity createUser(UserEntity user) {
+	public UserEntity saveUser(UserEntity user) {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		return userRepository.save(user);
 	}
 
-	@Override
+	/*@Override
 	public RoleEntity createRole(RoleEntity role) {
 		return roleRepository.save(role);
-	}
+	}*/
 
 	@Override
 	public void addRoleToUser(String username, String roleName) {
@@ -65,9 +65,9 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 		return userRepository.findByUsername(username);
 	}
 
-	@Override
+	/*@Override
 	public List<UserEntity> getUsers() {
 		return userRepository.findAll();
-	}
+	}*/
 	
 }
