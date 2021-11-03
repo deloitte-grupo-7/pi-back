@@ -22,6 +22,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.equipe7.getserv.resource.UserTokens;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class UserAuthenticationFilter  extends UsernamePasswordAuthenticationFilter{
@@ -43,19 +44,10 @@ public class UserAuthenticationFilter  extends UsernamePasswordAuthenticationFil
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 		User user = (User)authResult.getPrincipal();
-		Algorithm algorithm = Algorithm.HMAC256("easteregg".getBytes());
-		String access_token = JWT.create()
-				.withSubject(user.getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis() + 90 * 60 * 1000))
-				.withIssuer(request.getRequestURL().toString())
-				.withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-				.sign(algorithm);
-
-		String refresh_token = JWT.create()
-				.withSubject(user.getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis() + 14 * (24 * 60 * 60 * 1000)))
-				.withIssuer(request.getRequestURL().toString())
-				.sign(algorithm);
+		Algorithm algorithm = Algorithm.HMAC256(UserTokens.SECRET.getBytes());
+		
+		String access_token = UserTokens.createAccessTokenPrincipal(user, algorithm, request, 90l * 60l * 1000l);
+		String refresh_token = UserTokens.createRefreshTokenPrincipal(user, algorithm, request, 14l * (1440l * 60 * 1000));
 		
 		Map<String, String> tokens = new HashMap<>();
 		tokens.put("access_token", "Bearer " + access_token);

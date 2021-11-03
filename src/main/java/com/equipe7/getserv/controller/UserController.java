@@ -32,6 +32,7 @@ import com.equipe7.getserv.model.RegisterEntity;
 import com.equipe7.getserv.model.RoleEntity;
 import com.equipe7.getserv.model.UserEntity;
 import com.equipe7.getserv.repository.RoleRepository;
+import com.equipe7.getserv.resource.UserTokens;
 import com.equipe7.getserv.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,7 +50,7 @@ public class UserController {
 		this.userService = userService;
 	}
 	
-	@PostMapping("/register")
+	@PostMapping("/signup")
 	public ResponseEntity<?> registerAUser(@RequestBody SignUpForm form){
 		UserEntity user = new UserEntity();
 		user.setUsername(form.getUsername());
@@ -103,12 +104,7 @@ public class UserController {
 				String username = decodedJWT.getSubject();
 				UserEntity user = userService.getUser(username);
 
-				String access_token = JWT.create()
-						.withSubject(user.getUsername())
-						.withExpiresAt(new Date(System.currentTimeMillis() + 90 * 60 * 1000))
-						.withIssuer(request.getRequestURL().toString())
-						.withClaim("roles", user.getRoles().stream().map(RoleEntity::getName).collect(Collectors.toList()))
-						.sign(algorithm);
+				String access_token = UserTokens.createAccessTokenUser(user, algorithm, request, 90l * 60l * 1000l);
 				
 				Map<String, String> tokens = new HashMap<>();
 				tokens.put("access_token", "Bearer " + access_token);
