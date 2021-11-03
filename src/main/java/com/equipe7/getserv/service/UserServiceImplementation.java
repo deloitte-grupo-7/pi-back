@@ -47,17 +47,17 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 		return userRepository.save(user);
 	}
 
-	/*@Override
-	public RoleEntity createRole(RoleEntity role) {
-		return roleRepository.save(role);
-	}*/
-
 	@Override
 	public void addRoleToUser(String username, String roleName) {
 		UserEntity user = userRepository.findByUsername(username);
 		RoleEntity role = roleRepository.findByName(roleName);
 		user.getRoles().add(role);
-		userRepository.save(user);
+	}
+
+	@Override
+	public void addRoleToUser(UserEntity user, String roleName) {
+		RoleEntity role = roleRepository.findByName(roleName);
+		user.getRoles().add(role);
 	}
 
 	@Override
@@ -65,9 +65,9 @@ public class UserServiceImplementation implements UserService, UserDetailsServic
 		return userRepository.findByUsername(username);
 	}
 
-	/*@Override
+	@Override
 	public List<UserEntity> getUsers() {
 		return userRepository.findAll();
-	}*/
+	}
 	
 }

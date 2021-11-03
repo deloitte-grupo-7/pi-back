@@ -17,9 +17,6 @@ import com.equipe7.getserv.model.UserEntity;
 import com.equipe7.getserv.model.RegisterEntity;
 import com.equipe7.getserv.repository.UsuarioRepository;
 
-enum Regex{
-	ANY, DIGITO, EMAIL, NOME, SENHA, USERNAME
-}
 
 @RestController
 @RequestMapping
