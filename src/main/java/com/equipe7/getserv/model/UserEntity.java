@@ -3,23 +3,28 @@ package com.equipe7.getserv.model;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_user")
 public class UserEntity {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
 	@NotNull
@@ -32,6 +37,10 @@ public class UserEntity {
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<RoleEntity> roles = new ArrayList<>();
+	
+	@JsonIgnore
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+	private RegisterEntity register;
 
 	public UserEntity() {
 		super();
@@ -76,6 +85,14 @@ public class UserEntity {
 
 	public void setRoles(Collection<RoleEntity> roles) {
 		this.roles = roles;
+	}
+
+	public RegisterEntity getRegister() {
+		return register;
+	}
+
+	public void setRegister(RegisterEntity register) {
+		this.register = register;
 	}
 	
 }

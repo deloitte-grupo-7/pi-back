@@ -58,8 +58,8 @@ public class UserAuthenticationFilter  extends UsernamePasswordAuthenticationFil
 				.sign(algorithm);
 		
 		Map<String, String> tokens = new HashMap<>();
-		tokens.put("access_token", "Basic " + access_token);
-		tokens.put("refresh_token", "Basic " + refresh_token);
+		tokens.put("access_token", "Bearer " + access_token);
+		tokens.put("refresh_token", "Bearer " + refresh_token);
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 	}

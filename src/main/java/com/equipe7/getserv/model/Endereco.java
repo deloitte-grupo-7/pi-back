@@ -21,7 +21,7 @@ public class Endereco {
 	
 	@ManyToOne
 	@JsonIgnoreProperties({"enderecos", "telefones"})
-    private Usuario usuario;
+    private RegisterEntity usuario;
 	
 	@NotNull
 	@Size(min = 1, max = 128)
@@ -120,11 +120,11 @@ public class Endereco {
 		this.complemento = complemento;
 	}
 
-	public Usuario getUsuario() {
+	public RegisterEntity getUsuario() {
 		return usuario;
 	}
 
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(RegisterEntity usuario) {
 		this.usuario = usuario;
 	}
 }

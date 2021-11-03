@@ -5,6 +5,18 @@ public class RoleToUserForm {
 	private String username;
 	private String roleName;
 	
+	
+	
+	public RoleToUserForm() {
+		super();
+	}
+	
+	public RoleToUserForm(String username, String roleName) {
+		super();
+		this.username = username;
+		this.roleName = roleName;
+	}
+
 	public String getUsername() {
 		return username;
 	}

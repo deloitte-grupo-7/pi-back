@@ -21,7 +21,7 @@ public class Telefone {
 
 	@ManyToOne
 	@JsonIgnoreProperties({"telefones", "enderecos"})
-    private Usuario usuario;
+    private RegisterEntity usuario;
 	
 	@NotNull
 	@Size(min = 1, max = 3)
@@ -71,11 +71,11 @@ public class Telefone {
 		this.numero = numero;
 	}
 
-	public Usuario getUsuario() {
+	public RegisterEntity getUsuario() {
 		return usuario;
 	}
 
-	public void setUsuario(Usuario usuario) {
+	public void setUsuario(RegisterEntity usuario) {
 		this.usuario = usuario;
 	}
     

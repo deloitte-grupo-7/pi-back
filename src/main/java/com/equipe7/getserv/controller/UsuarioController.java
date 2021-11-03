@@ -10,9 +10,11 @@ import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
+import com.equipe7.getserv.controller.form.SignUpForm;
 import com.equipe7.getserv.model.Endereco;
 import com.equipe7.getserv.model.Telefone;
-import com.equipe7.getserv.model.Usuario;
+import com.equipe7.getserv.model.UserEntity;
+import com.equipe7.getserv.model.RegisterEntity;
 import com.equipe7.getserv.repository.UsuarioRepository;
 
 enum Regex{
@@ -23,18 +25,18 @@ enum Regex{
 @RequestMapping
 @CrossOrigin(value = "*", allowedHeaders = "*")
 public class UsuarioController {
-	
+	/*
 	@Autowired
 	private UsuarioRepository repository;
 	
 	@GetMapping("/u")
-	public Usuario getUser() {
-		return new Usuario();
+	public RegisterEntity getUser() {
+		return new RegisterEntity();
 	}
 	
 	@PutMapping("/test/{id}")
-	public ResponseEntity<?> test(@RequestBody Usuario user, @PathVariable Long id){
-		Usuario oldUser = repository.findById(id).orElse(new Usuario());
+	public ResponseEntity<?> test(@RequestBody RegisterEntity user, @PathVariable Long id){
+		RegisterEntity oldUser = repository.findById(id).orElse(new RegisterEntity());
 		if (oldUser.getId() == null)
 			return ResponseEntity.badRequest().body("Usuário Invalido");
 		
@@ -47,12 +49,12 @@ public class UsuarioController {
 		return oldUser;
 	}
 	
-	private Usuario updateTest(Usuario o, Usuario n) {
+	private RegisterEntity updateTest(RegisterEntity o, RegisterEntity n) {
 		o.setName(update(o.getName(), n.getName()));
 		o.setCpf(update(o.getCpf(), n.getCpf()));
 		o.setEmail(update(o.getEmail(), n.getEmail()));
-		o.setPassword(update(o.getPassword(), n.getPassword()));
-		o.setUsername(update(o.getUsername(), n.getUsername()));
+		//o.setPassword(update(o.getPassword(), n.getPassword()));
+		//o.setUsername(update(o.getUsername(), n.getUsername()));
 		
 		for (int i = 0; i < o.getPhoneNumbers().size(); i++) {
 			o.getPhoneNumbers().get(i).setDdi(
@@ -91,19 +93,19 @@ public class UsuarioController {
 	}
 	
 	@GetMapping("/all/users")
-	public ResponseEntity<List<Usuario>> getAllUsers(){
+	public ResponseEntity<List<RegisterEntity>> getAllUsers(){
 		return ResponseEntity.ok(repository.findAll());
 	}
 	
 	@GetMapping("/u/{id}")
-	public ResponseEntity<Usuario> getByUsername(@PathVariable Long id){
+	public ResponseEntity<RegisterEntity> getByUsername(@PathVariable Long id){
 		return repository.findById(id)
 				.map(resp -> ResponseEntity.ok(resp))
 				.orElse(ResponseEntity.notFound().build());
 	}
 
 	@PostMapping("/register")
-	public ResponseEntity<?> postUsuario(@RequestBody Usuario user) {
+	public ResponseEntity<?> postUsuario(@RequestBody RegisterEntity user) {
 		List<String> errors = validateUser(user);
 		if (errors.size() > 0)
 			return ResponseEntity.badRequest().body(errors);
@@ -114,7 +116,7 @@ public class UsuarioController {
 	
 	@PostMapping("/register/{id}/enderecos")
 	public ResponseEntity<?> postEnderecos(@RequestBody List<Endereco> enderecos, @PathVariable Long id) {
-		Usuario user = repository.findById(id).orElse(new Usuario());
+		RegisterEntity user = repository.findById(id).orElse(new RegisterEntity());
 		if (user.getId() == null)
 			return ResponseEntity.badRequest().body("Usuário Invalido");
 		
@@ -130,7 +132,7 @@ public class UsuarioController {
 	
 	@PostMapping("/register/{id}/telefones")
 	public ResponseEntity<?> postTelefones(@RequestBody List<Telefone> telefones, @PathVariable Long id) {
-		Usuario user = repository.findById(id).orElse(new Usuario());
+		RegisterEntity user = repository.findById(id).orElse(new RegisterEntity());
 		if (user.getId() == null)
 			return ResponseEntity.badRequest().body("Usuário Invalido");
 		
@@ -154,13 +156,13 @@ public class UsuarioController {
 		}
 	}
 	
-	private List<String> validateUser(Usuario user) {
+	private List<String> validateUser(RegisterEntity user) {
 		return errors(new ArrayList<>(),
 			validateField(user.getCpf(), Regex.DIGITO, 11, 11),
 			validateField(user.getName(), Regex.NOME, 2, 128),
 			validateField(user.getEmail(), Regex.EMAIL, 8, 64),
-			validateField(user.getUsername(), Regex.USERNAME, 3, 32),
-			validateField(user.getPassword(), Regex.SENHA, 8, 32),
+			//validateField(user.getUsername(), Regex.USERNAME, 3, 32),
+			//validateField(user.getPassword(), Regex.SENHA, 8, 32),
 			validateField(user.getBirthday())
 		);
 	}
@@ -220,5 +222,5 @@ public class UsuarioController {
 				return limit + "^(?=.{1,}$)^[^_.-][\\w\\d.-]{4,}(?<![._-])@\\w{2,}(\\.{1}[a-zA-Z]{2,}){1,2}(?!\\.)$";
 			default: return "";
 		}
-	}
+	}*/
 }
