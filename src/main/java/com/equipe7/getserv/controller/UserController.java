@@ -55,6 +55,9 @@ public class UserController {
 		UserEntity user = new UserEntity();
 		user.setUsername(form.getUsername());
 		user.setPassword(form.getPassword());
+
+		if (user.errors.size() > 0)
+			return ResponseEntity.badRequest().body(user.errors);
 		
 		user.getRoles().add(repository.findByName("ROLE_USER"));
 		
@@ -64,11 +67,16 @@ public class UserController {
 		register.setCpf(form.getCpf());
 		register.setEmail(form.getEmail());
 		register.setBirthday(form.getBirthday());
+
+		if (register.errors.size() > 0)
+			return ResponseEntity.badRequest().body(register.errors);
 		
 		user.setRegister(register);
 		register.setUser(user);
 		
 		return postUser(user);
+		
+		
 	}
 
 	@GetMapping("/users")

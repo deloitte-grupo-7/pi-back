@@ -11,8 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.equipe7.getserv.controller.form.SignUpForm;
-import com.equipe7.getserv.model.Endereco;
-import com.equipe7.getserv.model.Telefone;
+import com.equipe7.getserv.model.AddressEntity;
+import com.equipe7.getserv.model.PhoneNumberEntity;
 import com.equipe7.getserv.model.UserEntity;
 import com.equipe7.getserv.model.RegisterEntity;
 import com.equipe7.getserv.repository.UsuarioRepository;
@@ -20,7 +20,7 @@ import com.equipe7.getserv.repository.UsuarioRepository;
 
 @RestController
 @RequestMapping
-@CrossOrigin(value = "*", allowedHeaders = "*")
+@CrossOrigin(value = "*", allowedHeaders = "*", maxAge = 3600)
 public class UsuarioController {
 	/*
 	@Autowired
@@ -200,24 +200,5 @@ public class UsuarioController {
 			}
 		}
 		return errorList;
-	}
-	
-	private String regex(Regex regex, int min, int max) {
-		String limit = "^(?=.{"+ min + "," + max + "}$)";
-		switch (regex) {
-			case ANY:
-				return limit + ".+";
-			case DIGITO:
-				return limit + "\\d+";
-			case USERNAME: 
-				return limit + "(?=.*[a-zA-Z])+[\\w.-]+";
-			case NOME:
-				return limit + "([a-zA-ZÀ-ú]+[\\s]?)+";
-			case SENHA: 
-				return limit + "[\\w.@!#$&*-+=_]+";
-			case EMAIL:
-				return limit + "^(?=.{1,}$)^[^_.-][\\w\\d.-]{4,}(?<![._-])@\\w{2,}(\\.{1}[a-zA-Z]{2,}){1,2}(?!\\.)$";
-			default: return "";
-		}
 	}*/
 }

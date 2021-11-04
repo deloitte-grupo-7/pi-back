@@ -19,6 +19,8 @@ import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.equipe7.getserv.resource.Regex;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -45,6 +47,7 @@ public class UserEntity {
 	private RegisterEntity register;
 	
 	@Transient
+	@JsonIgnore
 	public Map<String, String> errors = new HashMap<>();
 
 	public UserEntity() {
@@ -73,6 +76,8 @@ public class UserEntity {
 	}
 
 	public void setUsername(String username) {
+		if (Regex.username(username, 0, 24, false))
+			errors.put("username", username);
 		this.username = username.toLowerCase();
 	}
 
@@ -81,6 +86,8 @@ public class UserEntity {
 	}
 
 	public void setPassword(String password) {
+		if (Regex.password(password, 8, 32, false))
+			errors.put("password", password);
 		this.password = password;
 	}
 

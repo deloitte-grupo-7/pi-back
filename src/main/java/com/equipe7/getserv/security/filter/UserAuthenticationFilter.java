@@ -16,13 +16,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
-import com.auth0.jwt.algorithms.Algorithm;
 import com.equipe7.getserv.resource.UserToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@CrossOrigin(value = "*", allowedHeaders = "*")
 public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 	
 	private final AuthenticationManager authenticationManager;

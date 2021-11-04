@@ -24,7 +24,7 @@ public class RoleEntity {
 		super();
 	}	
 
-	public RoleEntity(Long id, @NotNull @Size(max = 16) String name) {
+	public RoleEntity(Long id, String name) {
 		super();
 		this.id = id;
 		this.name = name;

@@ -1,19 +1,25 @@
 package com.equipe7.getserv.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.equipe7.getserv.resource.Regex;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "tb_telefone")
-public class Telefone {
+@Table(name = "tb_phone")
+public class PhoneNumberEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,19 +29,22 @@ public class Telefone {
 	@JsonIgnoreProperties({"telefones", "enderecos"})
     private RegisterEntity usuario;
 	
-	@NotNull
-	@Size(min = 1, max = 3)
+	@Size(max = 3)
 	private String ddi = "55";
 	
 	@NotNull
-	@Size(min = 1, max = 4)
+	@Size(max = 4)
 	private String ddd;
 	
 	@NotNull
-	@Size(min = 7, max = 12)
+	@Size(max = 16)
     private String numero;
 
-	public Telefone(){
+	@JsonIgnore
+	@Transient
+	public Map<String, String> errors = new HashMap<>();
+
+	public PhoneNumberEntity(){
 
     }
 
@@ -48,6 +57,8 @@ public class Telefone {
 	}
 	
 	public String getDdi() {
+		if (Regex.digit(ddi, 1, 3, true))
+			errors.put("ddi", ddi);
 		return ddi;
 	}
 
@@ -60,6 +71,8 @@ public class Telefone {
 	}
 
 	public void setDdd(String ddd) {
+		if (Regex.digit(ddd, 1, 4, false))
+			errors.put("ddd", ddd);
 		this.ddd = ddd;
 	}
 
@@ -68,6 +81,8 @@ public class Telefone {
 	}
 
 	public void setNumero(String numero) {
+		if (Regex.digit(numero, 5, 16, false))
+			errors.put("numero", numero);
 		this.numero = numero;
 	}
 
