@@ -1,19 +1,25 @@
 package com.equipe7.getserv.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import com.equipe7.getserv.resource.Regex;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "tb_endereco")
-public class Endereco {
+@Table(name = "tb_address")
+public class AddressEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,32 +30,34 @@ public class Endereco {
     private RegisterEntity usuario;
 	
 	@NotNull
-	@Size(min = 1, max = 128)
+	@Size(max = 128)
 	private String rua;
 	
 	@NotNull
-	@Size(min = 1, max = 8)
+	@Size(max = 8)
 	private String numero;
 	
-	@Size(min = 1, max = 64)
+	@Size(max = 64)
 	private String bairro;
 	
 	@NotNull
-	@Size(min = 1, max = 64)
+	@Size(max = 64)
 	private String cidade;
 	
 	@NotNull
-	@Size(min = 1, max = 32)
+	@Size(max = 64)
 	private String estado;
 	
-	@NotNull
-	@Size(min = 6, max = 9)
+	@Size(max = 9)
 	private String cep;
 
-	@Size(min = 1, max = 128)
 	private String complemento;
 	
-    public Endereco (){    	
+	@JsonIgnore
+	@Transient
+	public Map<String, String> errors = new HashMap<>(); 
+	
+    public AddressEntity (){    	
     }
 
 	public Long getId() {
@@ -61,11 +69,12 @@ public class Endereco {
 	}
 
 	public String getRua() {
-		setRua(this.rua);
 		return rua;
 	}
 
 	public void setRua(String rua) {
+		if (Regex.name(rua, 1, 128, false))
+			errors.put("rua", rua);
 		this.rua = rua.toUpperCase();
 	}
 
@@ -74,33 +83,38 @@ public class Endereco {
 	}
 
 	public void setNumero(String numero) {
+		if (Regex.digit(numero, 1, 8, false))
+			errors.put("numero", numero);
 		this.numero = numero;
 	}
 
 	public String getBairro() {
-		setBairro(this.bairro);
 		return bairro;
 	}
 
 	public void setBairro(String bairro) {
+		if (Regex.name(bairro, 1, 64, true))
+			errors.put("bairro", bairro);
 		this.bairro = bairro.toUpperCase();
 	}
 
 	public String getCidade() {
-		setCidade(this.cidade);
 		return cidade;
 	}
 
 	public void setCidade(String cidade) {
+		if (Regex.name(cidade, 1, 64, false))
+			errors.put("cidade", cidade);
 		this.cidade = cidade.toUpperCase();
 	}
 
 	public String getEstado() {
-		setEstado(this.estado);
 		return estado;
 	}
 
 	public void setEstado(String estado) {
+		if (Regex.name(estado, 1, 64, false))
+			errors.put("estado", estado);
 		this.estado = estado.toUpperCase();
 	}
 
@@ -109,6 +123,8 @@ public class Endereco {
 	}
 
 	public void setCep(String cep) {
+		if (Regex.digit(cep, 6, 9, true))
+			errors.put("cep", cep);
 		this.cep = cep;
 	}
 
@@ -117,7 +133,9 @@ public class Endereco {
 	}
 
 	public void setComplemento(String complemento) {
-		this.complemento = complemento;
+		if (Regex.any(complemento, 0, 255, true))
+			errors.put("complemento", complemento);
+		this.complemento = complemento.toUpperCase();
 	}
 
 	public RegisterEntity getUsuario() {
@@ -127,4 +145,5 @@ public class Endereco {
 	public void setUsuario(RegisterEntity usuario) {
 		this.usuario = usuario;
 	}
+	
 }
