@@ -18,29 +18,26 @@ import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
-import com.equipe7.getserv.resource.UserToken;
+import com.equipe7.getserv.resource.Token;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@CrossOrigin(value = "*", allowedHeaders = "*")
-public class UserAuthorizationFilter extends OncePerRequestFilter{
-
+public class UserAuthorizationFilter /*extends OncePerRequestFilter*/{
+/*
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-		if (request.getServletPath().equals("/login") || request.getServletPath().equals("/token/refresh")) {
+		if (request.getServletPath().equals("/signin") || request.getServletPath().equals("/token/refresh")) {
 			filterChain.doFilter(request, response);
 		} else {
 			String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-			if (authorizationHeader != null && authorizationHeader.startsWith(UserToken.START)) {
+			if (authorizationHeader != null && authorizationHeader.startsWith(Token.START)) {
 				try {
-					String token = authorizationHeader.substring(UserToken.START.length());
-					JWTVerifier varifier = JWT.require(UserToken.ALGORITHM).build();
+					String token = authorizationHeader.substring(Token.START.length());
+					JWTVerifier varifier = JWT.require(Token.ALGORITHM).build();
 					DecodedJWT decodedJWT = varifier.verify(token);
 					String username = decodedJWT.getSubject();
 					String[] roles = decodedJWT.getClaim("roles").asArray(String.class); 
@@ -53,7 +50,6 @@ public class UserAuthorizationFilter extends OncePerRequestFilter{
 				} catch (Exception exception) {
 					response.setHeader("error", exception.getMessage());
 					response.setStatus(HttpStatus.FORBIDDEN.value());
-					//response.sendError(HttpStatus.FORBIDDEN.value());
 
 					Map<String, String> error = new HashMap<>();
 					error.put("error_message", exception.getMessage());
@@ -64,8 +60,6 @@ public class UserAuthorizationFilter extends OncePerRequestFilter{
 				filterChain.doFilter(request, response);
 			}	
 		}
-	}
-
-	
+	}*/
 	
 }

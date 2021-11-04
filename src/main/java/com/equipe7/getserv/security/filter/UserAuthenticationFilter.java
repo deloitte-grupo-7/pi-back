@@ -17,7 +17,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.equipe7.getserv.resource.UserToken;
+import com.equipe7.getserv.resource.Token;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
@@ -28,7 +28,7 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 		this.authenticationManager = authenticationManager;
 	}
 
-	@Override //tenta autentificar um token
+	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
@@ -41,8 +41,8 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 		User user = (User)authResult.getPrincipal();
 		
-		String access_token = UserToken.createAccessToken(user, request, 90l * 60000l);
-		String refresh_token = UserToken.createRefreshToken(user, request, 30l * (1440l * 60000l));
+		String access_token = Token.createAccessTokenUser(user, 90l * 60000l);
+		String refresh_token = Token.createRefreshTokenUser(user, 30l * (1440l * 60000l));
 		
 		Map<String, String> tokens = new HashMap<>();
 		tokens.put("access_token", access_token);

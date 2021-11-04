@@ -20,7 +20,7 @@ import com.equipe7.getserv.repository.UsuarioRepository;
 
 @RestController
 @RequestMapping
-@CrossOrigin(value = "*", allowedHeaders = "*", maxAge = 3600)
+@CrossOrigin(value = "*", allowedHeaders = "*", origins = "*", maxAge = 3600)
 public class UsuarioController {
 	/*
 	@Autowired

@@ -3,13 +3,12 @@ package com.equipe7.getserv.security;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
+ 
 @Configuration
-public class SecurityCorsConfig implements WebMvcConfigurer{
-
+public class SecurityCorsConfig implements WebMvcConfigurer {
+ 
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**").allowedOrigins("*").allowedMethods("GET", "POST", "PUT", "DELETE");
+		registry.addMapping("/**").allowedMethods("*").allowedHeaders("*");
 	}
-	
 }

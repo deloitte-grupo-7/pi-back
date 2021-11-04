@@ -91,6 +91,10 @@ public class UserEntity {
 		this.password = password;
 	}
 
+	public void setPassEncoded(String password) {
+		this.password = password;
+	}
+
 	public Collection<RoleEntity> getRoles() {
 		return roles;
 	}
