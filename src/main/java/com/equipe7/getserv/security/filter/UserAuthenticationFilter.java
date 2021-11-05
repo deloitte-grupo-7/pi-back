@@ -1,5 +1,5 @@
 package com.equipe7.getserv.security.filter;
-
+/*
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +19,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.equipe7.getserv.resource.Token;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
+*/
+public class UserAuthenticationFilter {/*extends UsernamePasswordAuthenticationFilter{
 	
 	private final AuthenticationManager authenticationManager;
 	
@@ -54,5 +54,5 @@ public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilt
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
 		super.unsuccessfulAuthentication(request, response, failed);
-	}
+	}*/
 }

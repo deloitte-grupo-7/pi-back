@@ -10,9 +10,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.equipe7.getserv.security.filter.UserAuthenticationFilter;
+import com.equipe7.getserv.security.filter.UserAuthorizationFilter;
 //import com.equipe7.getserv.security.filter.UserAuthorizationFilter;
 
 @Configuration
@@ -34,8 +34,8 @@ public class SecurityBasicConfig extends WebSecurityConfigurerAdapter{
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.authorizeRequests().antMatchers("/signup/**", "/signin/**", "/token/refresh/**").permitAll();
 		http.authorizeRequests().anyRequest().authenticated();
-		http.addFilter(new UserAuthenticationFilter(authenticationManagerBean()));
-		//http.addFilterBefore(new UserAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+		//http.addFilter(new UserAuthenticationFilter(authenticationManagerBean()));
+		http.addFilterBefore(new UserAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 	
 	@Override

@@ -40,8 +40,6 @@ public class RegisterEntity {
     private String name = "";
 
 	@NotNull
-	@Column(unique = true)
-	@Size(max=11)
     private String cpf = "";
 
 	@NotNull
@@ -52,6 +50,9 @@ public class RegisterEntity {
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
     private Date birthday = new java.sql.Date(System.currentTimeMillis());
+	
+	@NotNull
+	private String imageURL = "";
 	
 	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnoreProperties("usuario")
@@ -133,6 +134,14 @@ public class RegisterEntity {
 		if (birthday.after(new Date(System.currentTimeMillis() - eighteenYears)))
 			errors.put("birthday", birthday.toString());
 		this.birthday = birthday;
+	}
+
+	public String getImageURL() {
+		return imageURL;
+	}
+
+	public void setImageURL(String imageURL) {
+		this.imageURL = imageURL;
 	}
 
 	public List<PhoneNumberEntity> getPhoneNumbers() {
