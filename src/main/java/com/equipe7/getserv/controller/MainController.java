@@ -20,19 +20,24 @@ import com.equipe7.getserv.controller.form.SignUpForm;
 import com.equipe7.getserv.model.RegisterEntity;
 import com.equipe7.getserv.model.UserEntity;
 import com.equipe7.getserv.repository.RoleRepository;
+import com.equipe7.getserv.repository.UserRepository;
+import com.equipe7.getserv.resource.Table;
 import com.equipe7.getserv.resource.Token;
 import com.equipe7.getserv.service.UserService;
 
 @RestController
 @RequestMapping("")
-public class UserController {
+public class MainController {
 	
 	private final UserService userServ;
-	
+
 	@Autowired
 	private RoleRepository repository;
 	
-	public UserController(UserService userServ) {
+	@Autowired
+	private UserRepository userRepository;
+	
+	public MainController(UserService userServ) {
 		super();
 		this.userServ = userServ;
 	}
@@ -61,24 +66,43 @@ public class UserController {
 		user.setRegister(register);
 		register.setUser(user);
 		
+		if (Table.getUsernames().size() == 0)
+			Table.reset(userRepository);
+
+		if (Table.getUsername(user.getUsername()))
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário já cadastrado");
+		if (Table.getEmail(register.getEmail()))
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("Email já cadastrado");
+//		if (Table.getEncodedCPF(register.getCpf()))
+//			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado");
+		
 		userServ.encodePassword(user);
 		return ResponseEntity.status(HttpStatus.CREATED).body(userServ.saveUser(user));
 	}
 	
 	@PostMapping("/signin")
-	public ResponseEntity<?> signIn(@RequestBody SignInForm form) {
+	public ResponseEntity<Map<String, String>> signIn(@RequestBody SignInForm form) {
 		UserEntity user = userServ.getUser(form.getUsername());
+		Map<String, String> response = new HashMap<>();
 		
-		if (user == null)
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário inválido");
+		if (user == null) {
+			response.put("error", "Usuário inválido");
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+		}
 		
-		if (!userServ.matches(form.getPassword(), user))
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Senha inválida");
+		if (!userServ.matches(form.getPassword(), user)) {
+			response.put("error", "Senha inválida");
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		}
 		
-		return ResponseEntity.ok(Token.createTokens(user));
+		response = Token.createTokens(user);
+		response.put("username", user.getUsername());
+		response.put("imageURL", "https://www.newsclick.in/sites/default/files/2019-04/Deloitte.jpg");
+		
+		return ResponseEntity.accepted().body(response);
 	}
 	
-	@GetMapping("/token/refresh")
+	@GetMapping("/token-refresh")
 	public ResponseEntity<Map<String, String>> refresh(HttpServletRequest request) {
 		String auth0 = request.getHeader(HttpHeaders.AUTHORIZATION);
 		if (auth0 != null && auth0.startsWith(Token.START)) {

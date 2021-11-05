@@ -12,6 +12,10 @@ public abstract class Table {
 	private static Set<String> usernames = new HashSet<>();
 	private static Set<String> emails = new HashSet<>();
 	private static Set<String> encodedCPFs = new HashSet<>();
+
+	public static Set<String> getUsernames() {
+		return usernames;
+	}
 	
 	public static boolean getUsername(String username) {
 		return usernames.contains(username);

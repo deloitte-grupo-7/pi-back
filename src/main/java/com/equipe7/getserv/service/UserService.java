@@ -34,7 +34,7 @@ public class UserService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		UserEntity user = userRepository.findByUsername(username);
 		if (user == null)
-			throw new UsernameNotFoundException("404\nUser not found: [ " + username + " ]");
+			throw new UsernameNotFoundException("404 - User not found: [ " + username + " ]");
 		
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 		user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));

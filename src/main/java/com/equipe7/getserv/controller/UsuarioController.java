@@ -1,5 +1,5 @@
 package com.equipe7.getserv.controller;
-
+/*
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +20,7 @@ import com.equipe7.getserv.repository.UsuarioRepository;
 
 @RestController
 @RequestMapping
-@CrossOrigin(value = "*", allowedHeaders = "*", origins = "*", maxAge = 3600)
+@CrossOrigin(value = "*", allowedHeaders = "*", origins = "*", maxAge = 3600)*/
 public class UsuarioController {
 	/*
 	@Autowired

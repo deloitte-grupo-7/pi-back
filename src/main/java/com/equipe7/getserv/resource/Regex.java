@@ -1,6 +1,6 @@
 package com.equipe7.getserv.resource;
 
-public class Regex {
+public abstract class Regex {
 	public static final String ANY = ".+";
 	public static final String DIGIT = "\\d+";
 	public static final String EMAIL = "^(?=.{1,}$)^[^_.-][\\w\\d.-]{4,}(?<![._-])@\\w{2,}(\\.{1}[a-zA-Z]{2,}){1,2}(?!\\.)$";
