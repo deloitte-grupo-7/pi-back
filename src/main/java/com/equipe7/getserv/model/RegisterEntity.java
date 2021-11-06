@@ -20,43 +20,38 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.equipe7.getserv.resource.Regex;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "tb_register")
+@Table(name = "_register")
 public class RegisterEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@NotNull
-	@Size(max=128)
+	@Column(nullable = false, length = 255)
     private String name = "";
 
-	@NotNull
+	@Column(nullable = false)
     private String cpf = "";
 
-	@NotNull
-	@Column(unique = true)
-	@Size(max=128)
+	@Column(unique = true, nullable = false, length = 128)
     private String email = "";
 	
-	@NotNull
+	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-    private Date birthday = new java.sql.Date(System.currentTimeMillis());
+    private Date birthday;
 		
+	@JsonIgnoreProperties("register_id")
 	@OneToMany(mappedBy = "register", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    //@JsonIgnoreProperties("register_id")
-	private List<PhoneNumberEntity> phoneNumbers = new ArrayList<>();
+	private List<PhoneEntity> phones = new ArrayList<>();
 	
+	@JsonIgnoreProperties("register_id")
 	@OneToMany(mappedBy = "register", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    //@JsonIgnoreProperties("register_id")
 	private List<AddressEntity> addresses = new ArrayList<>();
 	
 	@JsonIgnore
@@ -73,14 +68,14 @@ public class RegisterEntity {
     }
     
 	public RegisterEntity(Long id, String name, String cpf, String email, Date birthday,
-			List<PhoneNumberEntity> phoneNumbers, List<AddressEntity> addresses) {
+			List<PhoneEntity> phones, List<AddressEntity> addresses) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.cpf = cpf;
 		this.email = email;
 		this.birthday = birthday;
-		this.phoneNumbers = phoneNumbers;
+		this.phones = phones;
 		this.addresses = addresses;
 	}
 
@@ -150,12 +145,13 @@ public class RegisterEntity {
 		this.birthday = birthday;
 	}
 
-	public List<PhoneNumberEntity> getPhoneNumbers() {
-		return phoneNumbers;
+	public List<PhoneEntity> getPhones() {
+		return phones;
 	}
 
-	public void setPhoneNumbers(List<PhoneNumberEntity> phoneNumbers) {
-		this.phoneNumbers = phoneNumbers;
+	public void setPhones(List<PhoneEntity> phones) {
+		phones.forEach(phone -> phone.setRegister(this));
+		this.phones = phones;
 	}
 
 	public List<AddressEntity> getAddresses() {
@@ -163,6 +159,7 @@ public class RegisterEntity {
 	}
 
 	public void setAddresses(List<AddressEntity> addresses) {
+		addresses.forEach(address -> address.setRegister(this));
 		this.addresses = addresses;
 	}
 
@@ -171,6 +168,7 @@ public class RegisterEntity {
 	}
 
 	public void setUser(UserEntity user) {
+		user.setRegister(this);
 		this.user = user;
 	}
 	

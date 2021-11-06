@@ -12,15 +12,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.equipe7.getserv.resource.Regex;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "tb_address")
+@Table(name = "_address")
 public class AddressEntity {
 
 	@Id
@@ -28,32 +26,35 @@ public class AddressEntity {
     private Long id;
 	
 	@ManyToOne
-	//@JsonIgnoreProperties({"addresses", "phones"})
-	@JoinColumn(name = "register")
+	@JoinColumn(name = "register_id")
+	@JsonIgnoreProperties({"addresses", "phones", "user"})
     private RegisterEntity register;
 	
-	@NotNull
-	@Size(max = 128)
+	@Column(nullable = false,
+			length = 255)
 	private String rua;
 	
-	@NotNull
-	@Size(max = 8)
+	@Column(nullable = false,
+			length = 8)
 	private String numero;
 	
-	@Size(max = 64)
+	@Column(nullable = false,
+			length = 128)
 	private String bairro;
 	
-	@NotNull
-	@Size(max = 64)
+	@Column(nullable = false,
+			length = 128)
 	private String cidade;
 	
-	@NotNull
-	@Size(max = 64)
+	@Column(nullable = false,
+			length = 128)
 	private String estado;
 	
-	@Size(max = 9)
+	@Column(length = 9)
 	private String cep;
 
+	@Column(nullable = true,
+			length = 512)
 	private String complemento;
 	
 	@JsonIgnore

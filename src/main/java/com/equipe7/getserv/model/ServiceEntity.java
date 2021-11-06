@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "tb_service")
+@Table(name = "_service")
 public class ServiceEntity {
 	
 	@Id
@@ -37,8 +37,8 @@ public class ServiceEntity {
     private String imageURL;
     
 	@OneToMany(mappedBy = "service", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnoreProperties("service")
-    private List<RatingEntity> rates = new ArrayList<>();
+	@JsonIgnoreProperties("service_id")
+    private List<RateEntity> rates = new ArrayList<>();
     
     @ManyToOne
 	@JsonIgnore
@@ -81,11 +81,11 @@ public class ServiceEntity {
 		this.imageURL = imageURL;
 	}
 
-	public List<RatingEntity> getRates() {
+	public List<RateEntity> getRates() {
 		return rates;
 	}
 
-	public void setRates(List<RatingEntity> rates) {
+	public void setRates(List<RateEntity> rates) {
 		this.rates = rates;
 	}
 

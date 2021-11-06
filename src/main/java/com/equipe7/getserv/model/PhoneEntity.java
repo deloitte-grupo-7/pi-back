@@ -12,42 +12,38 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.equipe7.getserv.resource.Regex;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "tb_phone")
-public class PhoneNumberEntity {
+@Table(name = "_phone")
+public class PhoneEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
 	@ManyToOne
-	@JsonIgnoreProperties({"phones", "addresses"})
 	@JoinColumn(name = "register_id")
+	@JsonIgnoreProperties({"phones_id", "addresses_id", "user_id"})
     private RegisterEntity register;
 	
-	@Size(max = 3)
+	@Column(length=3, nullable=false)
 	private String ddi = "55";
 	
-	@NotNull
-	@Size(max = 4)
+	@Column(length=4, nullable=false)
 	private String ddd;
 	
-	@NotNull
-	@Size(max = 16)
-    private String numero;
+	@Column(length=16, nullable=false)
+    private String number;
 
 	@JsonIgnore
 	@Transient
 	public Map<String, String> errors = new HashMap<>();
 
-	public PhoneNumberEntity(){
+	public PhoneEntity(){
 
     }
 
@@ -79,14 +75,14 @@ public class PhoneNumberEntity {
 		this.ddd = ddd;
 	}
 
-	public String getNumero() {
-		return numero;
+	public String getNumber() {
+		return number;
 	}
 
-	public void setNumero(String numero) {
-		if (Regex.digit(numero, 5, 16, false))
-			errors.put("numero", numero);
-		this.numero = numero;
+	public void setNumber(String number) {
+		if (Regex.digit(number, 5, 16, false))
+			errors.put("number", number);
+		this.number = number;
 	}
 
 	public RegisterEntity getRegister() {
