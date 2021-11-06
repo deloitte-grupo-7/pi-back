@@ -1,11 +1,23 @@
 package com.equipe7.getserv.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "tb_service")
@@ -18,15 +30,20 @@ public class ServiceEntity {
 	@Column(nullable = false)
     private String title;
 	
-	@Column(length = 5000,
-			nullable = true)
+	@Column(length = 4096, nullable = true)
     private String description;
 	
 	@Column(nullable = true)
     private String imageURL;
     
-    @Column(nullable = true)
-    private int rate;
+	@OneToMany(mappedBy = "service", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@JsonIgnoreProperties("service")
+    private List<RatingEntity> rates = new ArrayList<>();
+    
+    @ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "profile_id")
+    private ProfileEntity profile; 
 
     public ServiceEntity(){
     	
@@ -64,12 +81,20 @@ public class ServiceEntity {
 		this.imageURL = imageURL;
 	}
 
-	public int getRate() {
-		return rate;
+	public List<RatingEntity> getRates() {
+		return rates;
 	}
 
-	public void setRate(int rate) {
-		this.rate = rate;
+	public void setRates(List<RatingEntity> rates) {
+		this.rates = rates;
+	}
+
+	public ProfileEntity getProfile() {
+		return profile;
+	}
+
+	public void setProfile(ProfileEntity profile) {
+		this.profile = profile;
 	}
     
 }

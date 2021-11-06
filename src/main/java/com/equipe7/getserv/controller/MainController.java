@@ -117,4 +117,10 @@ public class MainController {
 		}
 	}
 	
+	/*  Buscar serviços por usuário
+	 *  return all services
+	 *  get service from user
+	 *  
+	 */ 
+	
 }

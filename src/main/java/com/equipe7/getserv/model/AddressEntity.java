@@ -3,10 +3,12 @@ package com.equipe7.getserv.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -26,8 +28,9 @@ public class AddressEntity {
     private Long id;
 	
 	@ManyToOne
-	@JsonIgnoreProperties({"enderecos", "telefones"})
-    private RegisterEntity usuario;
+	//@JsonIgnoreProperties({"addresses", "phones"})
+	@JoinColumn(name = "register")
+    private RegisterEntity register;
 	
 	@NotNull
 	@Size(max = 128)
@@ -138,12 +141,12 @@ public class AddressEntity {
 		this.complemento = complemento.toUpperCase();
 	}
 
-	public RegisterEntity getUsuario() {
-		return usuario;
+	public RegisterEntity getRegister() {
+		return register;
 	}
 
-	public void setUsuario(RegisterEntity usuario) {
-		this.usuario = usuario;
+	public void setRegister(RegisterEntity register) {
+		this.register = register;
 	}
 	
 }

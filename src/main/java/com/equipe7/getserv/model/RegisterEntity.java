@@ -50,16 +50,13 @@ public class RegisterEntity {
 	@NotNull
 	@Temporal(TemporalType.TIMESTAMP)
     private Date birthday = new java.sql.Date(System.currentTimeMillis());
-	
-	@NotNull
-	private String imageURL = "";
-	
-	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("usuario")
+		
+	@OneToMany(mappedBy = "register", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //@JsonIgnoreProperties("register_id")
 	private List<PhoneNumberEntity> phoneNumbers = new ArrayList<>();
 	
-	@OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonIgnoreProperties("usuario")
+	@OneToMany(mappedBy = "register", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //@JsonIgnoreProperties("register_id")
 	private List<AddressEntity> addresses = new ArrayList<>();
 	
 	@JsonIgnore
@@ -110,8 +107,25 @@ public class RegisterEntity {
 	}
 
 	public void setCpf(String cpf) {
-		if (Regex.password(cpf, 8, 32, false))
+		if (Regex.digit(cpf, 11, 11, false))
 			errors.put("cpf", cpf);
+		/*
+		int[] verify = {0,0};
+		for (int i = 0; i < 9; i++) {
+			verify[1] += Character.getNumericValue(cpf.toCharArray()[i]) * (i + 1);
+		}
+		
+		System.out.print(verify[1]);
+		System.out.print(verify[1]%11%10);
+		
+		verify[0] = verify[1]%11%10;
+		verify[1] += (verify[0]*10);
+		
+		System.out.print((verify[0]*10) + verify[1]%11%10);
+		
+		if (Integer.parseInt(cpf.substring(9)) != (verify[0]*10) + verify[1]%11%10)
+			errors.put("cpf", "CPF inválido : " + (verify[0]*10) + verify[1]%11%10);*/
+		
 		this.cpf = cpf;
 	}
 
@@ -134,14 +148,6 @@ public class RegisterEntity {
 		if (birthday.after(new Date(System.currentTimeMillis() - eighteenYears)))
 			errors.put("birthday", birthday.toString());
 		this.birthday = birthday;
-	}
-
-	public String getImageURL() {
-		return imageURL;
-	}
-
-	public void setImageURL(String imageURL) {
-		this.imageURL = imageURL;
 	}
 
 	public List<PhoneNumberEntity> getPhoneNumbers() {

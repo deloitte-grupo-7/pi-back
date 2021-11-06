@@ -3,10 +3,12 @@ package com.equipe7.getserv.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -26,8 +28,9 @@ public class PhoneNumberEntity {
     private Long id;
 
 	@ManyToOne
-	@JsonIgnoreProperties({"telefones", "enderecos"})
-    private RegisterEntity usuario;
+	@JsonIgnoreProperties({"phones", "addresses"})
+	@JoinColumn(name = "register_id")
+    private RegisterEntity register;
 	
 	@Size(max = 3)
 	private String ddi = "55";
@@ -86,12 +89,12 @@ public class PhoneNumberEntity {
 		this.numero = numero;
 	}
 
-	public RegisterEntity getUsuario() {
-		return usuario;
+	public RegisterEntity getRegister() {
+		return register;
 	}
 
-	public void setUsuario(RegisterEntity usuario) {
-		this.usuario = usuario;
+	public void setRegister(RegisterEntity register) {
+		this.register = register;
 	}
     
 }
