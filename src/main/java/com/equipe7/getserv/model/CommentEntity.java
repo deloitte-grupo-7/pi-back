@@ -1,31 +1,33 @@
 package com.equipe7.getserv.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-//import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "tb_comment")
-public class CommentEntity {
+@Table(name = "_comment")
+public class CommentEntity implements Serializable{
 	
+	private static final long serialVersionUID = 1L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-/*
+
     @ManyToOne
 	@JsonIgnore
-	@JoinColumn(name = "link_id")
-	private RatingEntity rating;*/
+	@JoinColumn(name = "profile_id")
+	@JoinColumn(name = "service_id")
+	private RateEntity rate;
 	
 	@Column(nullable = false, length=1024)
 	private String comment;
@@ -37,14 +39,14 @@ public class CommentEntity {
 	public void setId(Long id) {
 		this.id = id;
 	}
-/*
-	public RatingEntity getRating() {
-		return rating;
+
+	public RateEntity getRate() {
+		return rate;
 	}
 
-	public void setRating(RatingEntity rating) {
-		this.rating = rating;
-	}*/
+	public void setRate(RateEntity rate) {
+		this.rate = rate;
+	}
 
 	public String getComment() {
 		return comment;

@@ -16,40 +16,36 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 import com.equipe7.getserv.resource.Regex;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "tb_user")
+@Table(name = "_user")
 public class UserEntity {
-	
-	//Profile here
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull
-	@Size(max = 31)
-	@Column(unique = true)
+	@Column(length = 32,
+			unique = true,
+			nullable = false)
 	private String username;
 	
-	@NotNull
+	@Column(nullable = false)
 	private String password;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<RoleEntity> roles = new ArrayList<>();
 	
-	//@JsonIgnoreProperties({"user_id"})
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+	@JsonIgnoreProperties("user")
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private RegisterEntity register;
 	
-	//@JsonIgnoreProperties({"user_id"})
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+	@JsonIgnoreProperties("user_id")
+	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private ProfileEntity profile;
 	
 	@Transient
@@ -61,12 +57,14 @@ public class UserEntity {
 		this.id = null;
 	}
 
-	public UserEntity(Long id, String username, String password, Collection<RoleEntity> roles) {
+	public UserEntity(Long id, String username, String password, Collection<RoleEntity> roles, RegisterEntity register, ProfileEntity profile) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
 		this.roles = roles;
+		this.register = register;
+		this.profile = profile;
 	}
 
 	public Long getId() {
@@ -110,6 +108,7 @@ public class UserEntity {
 	}
 
 	public RegisterEntity getRegister() {
+		register.setUser(this);
 		return register;
 	}
 
@@ -118,6 +117,7 @@ public class UserEntity {
 	}
 
 	public ProfileEntity getProfile() {
+		profile.setUser(this);
 		return profile;
 	}
 

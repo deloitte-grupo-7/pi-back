@@ -19,32 +19,33 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
-@Table(name = "tb_profile")
+@Table(name = "_profile")
 public class ProfileEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(length = 512)
+	@Column(name = "picture", length = 512)
 	private String pictureURL;
 	
 	@JsonIgnore
 	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user", nullable = false, unique = true)
+	@JoinColumn(name = "user_id", nullable = false, unique = true)
 	private UserEntity user;
-	
+
+	@JsonIgnoreProperties("profile_id")
 	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnoreProperties("profile")
 	private List<ServiceEntity> services = new ArrayList<>();
-	
+
+	@JsonIgnoreProperties("profile_id")
 	@OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnoreProperties("profile")
-	private List<RatingEntity> rates = new ArrayList<>();
+	private List<RateEntity> rates = new ArrayList<>();
 	
-	
-	
-	//Interação com Serviços externos 
+	public ProfileEntity() {
+		super();
+		this.id = null;
+	}
 
 	public String getPictureURL() {
 		return pictureURL;
@@ -63,6 +64,7 @@ public class ProfileEntity {
 	}
 
 	public UserEntity getUser() {
+		user.setProfile(this);
 		return user;
 	}
 
@@ -71,6 +73,7 @@ public class ProfileEntity {
 	}
 
 	public List<ServiceEntity> getServices() {
+		services.forEach(service -> service.setProfile(this));
 		return services;
 	}
 
@@ -78,11 +81,12 @@ public class ProfileEntity {
 		this.services = services;
 	}
 
-	public List<RatingEntity> getRates() {
+	public List<RateEntity> getRates() {
+		rates.forEach(rate -> rate.setProfile(this));
 		return rates;
 	}
 
-	public void setRates(List<RatingEntity> rates) {
+	public void setRates(List<RateEntity> rates) {
 		this.rates = rates;
 	}
 	
