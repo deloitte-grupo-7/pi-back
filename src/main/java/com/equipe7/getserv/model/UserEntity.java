@@ -116,5 +116,13 @@ public class UserEntity {
 	public void setRegister(RegisterEntity register) {
 		this.register = register;
 	}
+
+	public ProfileEntity getProfile() {
+		return profile;
+	}
+
+	public void setProfile(ProfileEntity profile) {
+		this.profile = profile;
+	}
 	
 }

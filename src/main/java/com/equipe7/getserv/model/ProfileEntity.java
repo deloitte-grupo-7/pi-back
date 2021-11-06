@@ -53,4 +53,37 @@ public class ProfileEntity {
 	public void setPictureURL(String pictureURL) {
 		this.pictureURL = pictureURL;
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
+	public List<ServiceEntity> getServices() {
+		return services;
+	}
+
+	public void setServices(List<ServiceEntity> services) {
+		this.services = services;
+	}
+
+	public List<RatingEntity> getRates() {
+		return rates;
+	}
+
+	public void setRates(List<RatingEntity> rates) {
+		this.rates = rates;
+	}
+	
 }

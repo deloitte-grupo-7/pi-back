@@ -15,13 +15,13 @@ import com.equipe7.getserv.model.AddressEntity;
 import com.equipe7.getserv.model.PhoneNumberEntity;
 import com.equipe7.getserv.model.UserEntity;
 import com.equipe7.getserv.model.RegisterEntity;
-import com.equipe7.getserv.repository.UsuarioRepository;
+import com.equipe7.getserv.repository.UsuarioRepository;*/
 
-
+/*
 @RestController
 @RequestMapping
 @CrossOrigin(value = "*", allowedHeaders = "*", origins = "*", maxAge = 3600)*/
-public class UsuarioController {
+public class UserController {
 	/*
 	@Autowired
 	private UsuarioRepository repository;

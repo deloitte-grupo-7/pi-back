@@ -10,14 +10,18 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.equipe7.getserv.controller.form.PostForm;
 import com.equipe7.getserv.controller.form.SignInForm;
 import com.equipe7.getserv.controller.form.SignUpForm;
+import com.equipe7.getserv.model.ProfileEntity;
 import com.equipe7.getserv.model.RegisterEntity;
+import com.equipe7.getserv.model.ServiceEntity;
 import com.equipe7.getserv.model.UserEntity;
 import com.equipe7.getserv.repository.RoleRepository;
 import com.equipe7.getserv.repository.UserRepository;
@@ -117,10 +121,34 @@ public class MainController {
 		}
 	}
 	
-	/*  Buscar serviços por usuário
-	 *  return all services
-	 *  get service from user
-	 *  
-	 */ 
+	@PostMapping("/u/{username}")
+	public ResponseEntity<?> postService(@RequestBody PostForm form, @PathVariable String username) {
+		UserEntity user = userServ.getUser(username);
+		if (user == null)
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário Inválido");
+		
+		ProfileEntity profile = new ProfileEntity();
+		user.setProfile(profile);
+		ServiceEntity service = new ServiceEntity();
+		
+		int i = 0;
+		System.out.println(i++);
+		service.setTitle(form.getTitle());
+		System.out.println(i++);
+		service.setImageURL(form.getImgUrl());
+		System.out.println(i++);
+		service.setDescription(form.getDescription());
+		
+		System.out.println(i++);
+		profile.getServices().add(service);
+		profile.setUser(user);
+		
+		System.out.println(i++);
+		userServ.saveUser(user);
+	
+		System.out.println(i++);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(form);
+	}
+	
 	
 }
