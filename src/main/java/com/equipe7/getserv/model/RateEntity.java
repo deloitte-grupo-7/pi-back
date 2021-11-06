@@ -79,7 +79,6 @@ public class RateEntity implements Serializable{
 	}
 
 	public void setComments(List<CommentEntity> comments) {
-		comments.forEach(comment -> comment.setRate(this));
 		this.comments = comments;
 	}
 	

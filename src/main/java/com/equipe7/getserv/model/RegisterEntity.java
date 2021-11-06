@@ -150,7 +150,6 @@ public class RegisterEntity {
 	}
 
 	public void setPhones(List<PhoneEntity> phones) {
-		phones.forEach(phone -> phone.setRegister(this));
 		this.phones = phones;
 	}
 
@@ -159,7 +158,6 @@ public class RegisterEntity {
 	}
 
 	public void setAddresses(List<AddressEntity> addresses) {
-		addresses.forEach(address -> address.setRegister(this));
 		this.addresses = addresses;
 	}
 
@@ -168,7 +166,6 @@ public class RegisterEntity {
 	}
 
 	public void setUser(UserEntity user) {
-		user.setRegister(this);
 		this.user = user;
 	}
 	

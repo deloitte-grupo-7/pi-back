@@ -64,7 +64,6 @@ public class ProfileEntity {
 	}
 
 	public UserEntity getUser() {
-		user.setProfile(this);
 		return user;
 	}
 
@@ -73,7 +72,6 @@ public class ProfileEntity {
 	}
 
 	public List<ServiceEntity> getServices() {
-		services.forEach(service -> service.setProfile(this));
 		return services;
 	}
 
@@ -82,7 +80,6 @@ public class ProfileEntity {
 	}
 
 	public List<RateEntity> getRates() {
-		rates.forEach(rate -> rate.setProfile(this));
 		return rates;
 	}
 
