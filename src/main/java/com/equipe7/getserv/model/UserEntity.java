@@ -108,7 +108,6 @@ public class UserEntity {
 	}
 
 	public RegisterEntity getRegister() {
-		register.setUser(this);
 		return register;
 	}
 
@@ -117,7 +116,6 @@ public class UserEntity {
 	}
 
 	public ProfileEntity getProfile() {
-		profile.setUser(this);
 		return profile;
 	}
 
