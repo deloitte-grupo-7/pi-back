@@ -24,10 +24,9 @@ public class AdminController {
 		this.userServ = userServ;
 	}
 
-
-	@GetMapping("/addrole/{user}/{role}")
+	@GetMapping("/addrole/{user}:{role}")
 	public ResponseEntity<String> addRoleToUser(@PathVariable String user, @PathVariable String role){
-		userServ.addRoleToUser(user, role);
+		userServ.addRoleToUser(user, "ROLE_" + role);
 		return ResponseEntity.ok(user + " : " + role);
 	}
 	

@@ -21,21 +21,27 @@ public abstract class Token {
 
 	public static final String KEY = "KuxTWb@90NoSx7eo";
 	public static final String START = "Bearer ";
-	public static final Algorithm ALGORITHM = Algorithm.HMAC256(Token.KEY.getBytes()); 
+	public static final Algorithm ALGORITHM = Algorithm.HMAC256(Token.KEY.getBytes());
 	
-	public static String createAccessTokenUser(User user, long exp) {
-		return START + JWT.create()
+	public static final long EXP_ACCESS = 90l * 60000l;
+	public static final long EXP_REFRESH = 30l * (1440l * 60000l);
+	
+	public static Map<String, String> createTokensUser(User user){
+		String access_token = START + JWT.create()
 				.withSubject(user.getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis() + exp))
+				.withExpiresAt(new Date(System.currentTimeMillis() + EXP_ACCESS))
 				.withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
 				.sign(ALGORITHM);
-	}
-	
-	public static String createRefreshTokenUser(User user, long exp) {
-		return START + JWT.create()
+		
+		String refresh_token = START + JWT.create()
 				.withSubject(user.getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis() + exp))
+				.withExpiresAt(new Date(System.currentTimeMillis() + EXP_REFRESH))
 				.sign(ALGORITHM);
+		
+		Map<String, String> tokens = new HashMap<>();
+		tokens.put("access_token", access_token);
+		tokens.put("refresh_token", refresh_token);
+		return tokens;
 	}
 	
 	public static String createAccessToken(UserEntity user, long exp) {
@@ -54,8 +60,8 @@ public abstract class Token {
 	}
 	
 	public static Map<String, String> createTokens(UserEntity user){
-		String access_token = Token.createAccessToken(user, 90l * 60000l);
-		String refresh_token = Token.createRefreshToken(user, 30l * (1440l * 60000l));
+		String access_token = Token.createAccessToken(user, EXP_ACCESS);
+		String refresh_token = Token.createRefreshToken(user, EXP_REFRESH);
 		
 		Map<String, String> tokens = new HashMap<>();
 		tokens.put("access_token", access_token);

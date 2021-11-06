@@ -1,7 +1,6 @@
 package com.equipe7.getserv.security.filter;
-/*
+
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.FilterChain;
@@ -19,8 +18,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import com.equipe7.getserv.resource.Token;
 import com.fasterxml.jackson.databind.ObjectMapper;
-*/
-public class UserAuthenticationFilter {/*extends UsernamePasswordAuthenticationFilter{
+
+public class UserAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
 	
 	private final AuthenticationManager authenticationManager;
 	
@@ -39,14 +38,8 @@ public class UserAuthenticationFilter {/*extends UsernamePasswordAuthenticationF
 
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-		User user = (User)authResult.getPrincipal();
-		
-		String access_token = Token.createAccessTokenUser(user, 90l * 60000l);
-		String refresh_token = Token.createRefreshTokenUser(user, 30l * (1440l * 60000l));
-		
-		Map<String, String> tokens = new HashMap<>();
-		tokens.put("access_token", access_token);
-		tokens.put("refresh_token", refresh_token);
+		User user = (User)authResult.getPrincipal(); 
+		Map<String, String> tokens = Token.createTokensUser(user);
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		new ObjectMapper().writeValue(response.getOutputStream(), tokens);
 	}
@@ -54,5 +47,5 @@ public class UserAuthenticationFilter {/*extends UsernamePasswordAuthenticationF
 	@Override
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
 		super.unsuccessfulAuthentication(request, response, failed);
-	}*/
+	}
 }

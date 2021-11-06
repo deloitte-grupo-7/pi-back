@@ -27,6 +27,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Table(name = "tb_user")
 public class UserEntity {
 	
+	//Profile here
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -42,9 +44,13 @@ public class UserEntity {
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<RoleEntity> roles = new ArrayList<>();
 	
-	@JsonIgnoreProperties({"user", "user_id"})
+	//@JsonIgnoreProperties({"user_id"})
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
 	private RegisterEntity register;
+	
+	//@JsonIgnoreProperties({"user_id"})
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "user")
+	private ProfileEntity profile;
 	
 	@Transient
 	@JsonIgnore
@@ -109,6 +115,14 @@ public class UserEntity {
 
 	public void setRegister(RegisterEntity register) {
 		this.register = register;
+	}
+
+	public ProfileEntity getProfile() {
+		return profile;
+	}
+
+	public void setProfile(ProfileEntity profile) {
+		this.profile = profile;
 	}
 	
 }
