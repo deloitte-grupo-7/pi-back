@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.equipe7.getserv.controller.form.PostForm;
+import com.equipe7.getserv.controller.form.ProfileForm;
 import com.equipe7.getserv.model.ProfileEntity;
 import com.equipe7.getserv.model.UserEntity;
 import com.equipe7.getserv.model.ServiceEntity;
@@ -44,33 +45,39 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.FOUND).body(user);
 	}
 
-	@GetMapping("/{username}/test")
+	@GetMapping("/{username}/profile")
 	public ResponseEntity<?> getTest(@PathVariable String username) {
 		UserEntity user = userSv.getUser(username);
 		if (user == null)
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		return ResponseEntity.status(HttpStatus.FOUND).body(user.getRegister());
+			return ResponseEntity.notFound().build();
+		
+		ProfileForm profile = new ProfileForm(
+				user.getUsername(),
+				user.getRegister().getName(),
+				user.getProfile().getAbout(),
+				user.getProfile().getPictureURL(), 5);
+		
+		return ResponseEntity.ok().body(profile);
 	}
 	
-	@PostMapping("/{username}")
+	@PostMapping("/{username}/services")
 	public ResponseEntity<?> postService(@RequestBody PostForm form, @PathVariable String username) {
 		UserEntity user = userSv.getUser(username);
 		if (user == null)
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário Inválido");
+			return ResponseEntity.badRequest().body("Usuário Inválido");
 		
-		ProfileEntity profile = new ProfileEntity();
-		user.setProfile(profile);
 		ServiceEntity service = new ServiceEntity();
 		
 		service.setTitle(form.getTitle());
 		service.setImageURL(form.getImgUrl());
 		service.setDescription(form.getDescription());
 		
-		profile.getServices().add(service);
-		profile.setUser(user);
+		user.getProfile().getServices().add(service);
+		service.setProfileDep(user.getProfile());
 		
 		userSv.saveUser(user);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(form);
+		form.setId(service.getId());
+		return ResponseEntity.created(null).body(form);
 	}
 	
 	/*

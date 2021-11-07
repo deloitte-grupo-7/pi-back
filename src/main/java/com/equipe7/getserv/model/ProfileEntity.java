@@ -18,6 +18,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.equipe7.getserv.resource.Regex;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -31,6 +32,9 @@ public class ProfileEntity {
 	
 	@Column(name = "picture", length = 512)
 	private String pictureURL;
+	
+	@Column(length = 4096)
+	private String about;
 
 	/* -- */
 	
@@ -69,7 +73,19 @@ public class ProfileEntity {
 	}
 
 	public void setPictureURL(String pictureURL) {
+		if (Regex.any(about, 0, 512, true))
+			errors.put("imgUrl", "Formato incompatível");
 		this.pictureURL = pictureURL;
+	}
+
+	public String getAbout() {
+		return about;
+	}
+
+	public void setAbout(String about) {
+		if (Regex.any(about, 0, 4096, true))
+			errors.put("about", "Limite alcançado");
+		this.about = about;
 	}
 	
 	/* -- */
