@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.equipe7.getserv.controller.form.PostForm;
@@ -35,7 +36,8 @@ import com.equipe7.getserv.service.UserService;
 @RequestMapping("")
 public class MainController {
 	
-	private final UserService userServ;
+	@Autowired
+	private UserService userServ;
 
 	@Autowired
 	private RoleRepository repository;
@@ -43,10 +45,12 @@ public class MainController {
 	@Autowired
 	private UserRepository userRepository;
 	
-	public MainController(UserService userServ) {
-		super();
-		this.userServ = userServ;
-	}
+//	@GetMapping("/api/get/usernames")
+//	public ResponseEntity<Boolean> usernameExisting(@RequestParam String username){
+//		if (Table.getUsernames().size() == 0)
+//			Table.reset(userRepository);
+//		return ResponseEntity.ok(Table.getUsername(username));
+//	}
 	
 	@PostMapping("/signup")
 	public ResponseEntity<?> signUp(@RequestBody SignUpForm form){
@@ -83,6 +87,7 @@ public class MainController {
 //			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado");
 		
 		userServ.encodePassword(user);
+		Table.addUsername(user.getUsername());
 		return ResponseEntity.created(null).body(userServ.saveUser(user));
 	}
 	
@@ -132,20 +137,7 @@ public class MainController {
 		List<ProviderForm> providers = new ArrayList<>();
 		users.forEach(user -> {
 			if (user.getProfile().getServices().size() > 0) {
-				
-				ProviderForm provider = new ProviderForm(
-					user.getUsername(),
-					user.getRegister().getName(),
-					user.getProfile().getAbout(),
-					user.getProfile().getPictureURL(), 5);
-				
-				user.getProfile().getServices().forEach(service -> {
-					provider.getServices().add(new PostForm(
-						service.getId(), service.getTitle(),
-						service.getImageURL(), service.getDescription()
-					));
-				});
-				
+				ProviderForm provider = new ProviderForm(user);
 				providers.add(provider);
 			}	
 		});

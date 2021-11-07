@@ -1,24 +1,37 @@
 package com.equipe7.getserv.controller.form;
 
+import com.equipe7.getserv.model.UserEntity;
+
 public class ProfileForm {
 
 	protected String username;
 	protected String name;
-	protected String about;
+	protected String description;
 	protected String imgUrl;
-	protected Integer rate; // «« fictício
+	protected Integer rating; // «« fictício
+	protected String tagline;
 	
 	public ProfileForm() {
 		super();
 	}
 	
-	public ProfileForm(String username, String name, String about, String imgUrl, Integer rate) {
+	public ProfileForm(String username, String name, String description, String imgUrl, Integer rating, String tagline) {
 		super();
 		this.username = username;
 		this.name = name;
-		this.about = about;
+		this.description = description;
 		this.imgUrl = imgUrl;
-		this.rate = rate;
+		this.rating = rating;
+		this.tagline = tagline;
+	}
+	
+	public ProfileForm(UserEntity user) {
+		setUsername(user.getUsername());
+		setName(user.getRegister().getName());
+		setDescription(user.getProfile().getAbout());
+		setImgUrl(user.getProfile().getPictureURL());
+		setRating(5);
+		setTagline(user.getProfile().getTagline());
 	}
 
 	public String getUsername() {
@@ -37,12 +50,12 @@ public class ProfileForm {
 		this.name = name;
 	}
 	
-	public String getAbout() {
-		return about;
+	public String getDescription() {
+		return description;
 	}
 	
-	public void setAbout(String about) {
-		this.about = about;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 	
 	public String getImgUrl() {
@@ -53,11 +66,19 @@ public class ProfileForm {
 		this.imgUrl = imgUrl;
 	}
 	
-	public Integer getRate() {
-		return rate;
+	public Integer getRating() {
+		return rating;
 	}
 	
-	public void setRate(Integer rate) {
-		this.rate = rate;
+	public void setRating(Integer rate) {
+		this.rating = rate;
+	}
+
+	public String getTagline() {
+		return tagline;
+	}
+
+	public void setTagline(String tagline) {
+		this.tagline = tagline;
 	}
 }

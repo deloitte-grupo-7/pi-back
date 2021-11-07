@@ -52,13 +52,7 @@ public class UserController {
 		if (user == null)
 			return ResponseEntity.notFound().build();
 		
-		ProfileForm profile = new ProfileForm(
-				user.getUsername(),
-				user.getRegister().getName(),
-				user.getProfile().getAbout(),
-				user.getProfile().getPictureURL(), 5);
-		
-		return ResponseEntity.ok().body(profile);
+		return ResponseEntity.ok().body(new ProfileForm(user));
 	}
 
 	@GetMapping("/{username}/services")
