@@ -37,6 +37,8 @@ public class UserEntity {
 	@Column(nullable = false)
 	private String password;
 	
+	/* -- */
+	
 	@ManyToMany(fetch = FetchType.EAGER)
 	private Collection<RoleEntity> roles = new ArrayList<>();
 	
@@ -44,7 +46,7 @@ public class UserEntity {
 	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private RegisterEntity register;
 	
-	@JsonIgnoreProperties("user_id")
+	@JsonIgnoreProperties("user")
 	@OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private ProfileEntity profile;
 	
@@ -80,6 +82,7 @@ public class UserEntity {
 	}
 
 	public void setUsername(String username) {
+		username = username.trim();
 		if (Regex.username(username, 0, 24, false))
 			errors.put("username", username);
 		this.username = username.toLowerCase();
@@ -99,6 +102,8 @@ public class UserEntity {
 		this.password = password;
 	}
 
+	/* -- */
+	
 	public Collection<RoleEntity> getRoles() {
 		return roles;
 	}
@@ -120,6 +125,22 @@ public class UserEntity {
 	}
 
 	public void setProfile(ProfileEntity profile) {
+		this.profile = profile;
+	}
+	
+	/* -- */
+	
+	public void addRole(RoleEntity role) {
+		roles.add(role);
+	}
+	
+	public void setRegisterDep(RegisterEntity register) {
+		register.setUser(this);
+		this.register = register;
+	}
+	
+	public void setProfileDep(ProfileEntity profile) {
+		profile.setUser(this);
 		this.profile = profile;
 	}
 	

@@ -7,11 +7,14 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "_role")
 public class RoleEntity {
 	
 	@Id
+	@JsonIgnore
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
@@ -42,7 +45,9 @@ public class RoleEntity {
 	}
 
 	public void setName(String name) {
-		this.name = name.toUpperCase();
+		if (name.startsWith("ROLE_"))
+			this.name = name.toUpperCase();
+		else this.name = "ROLE_" + name.toUpperCase();
 	}
 	
 	

@@ -24,11 +24,6 @@ public class PhoneEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-	@ManyToOne
-	@JoinColumn(name = "register_id")
-	@JsonIgnoreProperties({"phones_id", "addresses_id", "user_id"})
-    private RegisterEntity register;
 	
 	@Column(length=3, nullable=false)
 	private String ddi = "55";
@@ -38,6 +33,13 @@ public class PhoneEntity {
 	
 	@Column(length=16, nullable=false)
     private String number;
+
+	/* -- */
+	
+	@ManyToOne
+	@JoinColumn(name = "register_id")
+	@JsonIgnoreProperties({"phones", "addresses", "user"})
+    private RegisterEntity register;
 
 	@JsonIgnore
 	@Transient
@@ -84,12 +86,21 @@ public class PhoneEntity {
 			errors.put("number", number);
 		this.number = number;
 	}
+	
+	/* -- */
 
 	public RegisterEntity getRegister() {
 		return register;
 	}
 
 	public void setRegister(RegisterEntity register) {
+		this.register = register;
+	}
+	
+	/* -- */
+
+	public void setRegisterDep(RegisterEntity register) {
+		register.getPhones().add(this);
 		this.register = register;
 	}
     

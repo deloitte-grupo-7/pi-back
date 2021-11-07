@@ -43,6 +43,14 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		return ResponseEntity.status(HttpStatus.FOUND).body(user);
 	}
+
+	@GetMapping("/{username}/test")
+	public ResponseEntity<?> getTest(@PathVariable String username) {
+		UserEntity user = userSv.getUser(username);
+		if (user == null)
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		return ResponseEntity.status(HttpStatus.FOUND).body(user.getRegister());
+	}
 	
 	@PostMapping("/{username}")
 	public ResponseEntity<?> postService(@RequestBody PostForm form, @PathVariable String username) {
