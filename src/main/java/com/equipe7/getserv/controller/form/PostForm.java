@@ -1,5 +1,7 @@
 package com.equipe7.getserv.controller.form;
 
+import com.equipe7.getserv.model.ServiceEntity;
+
 public class PostForm {
 
 	private Long id;
@@ -17,6 +19,15 @@ public class PostForm {
 		this.title = title;
 		this.imgUrl = imgUrl;
 		this.description = description;
+	}
+	
+	public PostForm(ServiceEntity service) {
+		if (service.getId() != null) {
+			setId(service.getId());
+			setTitle(service.getTitle());
+			setImgUrl(service.getImageURL());
+			setDescription(service.getDescription());
+		}
 	}
 
 	public Long getId() {
