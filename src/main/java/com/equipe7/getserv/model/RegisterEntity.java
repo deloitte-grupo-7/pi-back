@@ -1,10 +1,10 @@
 package com.equipe7.getserv.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -45,30 +45,31 @@ public class RegisterEntity {
 	@Column(nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
     private Date birthday;
-		
-	@JsonIgnoreProperties("register_id")
-	@OneToMany(mappedBy = "register", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<PhoneEntity> phones = new ArrayList<>();
 	
-	@JsonIgnoreProperties("register_id")
-	@OneToMany(mappedBy = "register", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<AddressEntity> addresses = new ArrayList<>();
+	/* -- */
 	
-	@JsonIgnore
+	@JsonIgnoreProperties("register")
+	@OneToMany(mappedBy = "register", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<PhoneEntity> phones = new HashSet<>();
+	
+	@JsonIgnoreProperties("register")
+	@OneToMany(mappedBy = "register", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private Set<AddressEntity> addresses = new HashSet<>();
+	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable = false, unique = true)
 	private UserEntity user;
 	
 	@JsonIgnore
 	@Transient
-	public Map<String, String> errors = new HashMap<>(); 
+	public Map<String, String> errors = new HashMap<>();
 
     public RegisterEntity(){
     	super();
     }
     
 	public RegisterEntity(Long id, String name, String cpf, String email, Date birthday,
-			List<PhoneEntity> phones, List<AddressEntity> addresses) {
+			Set<PhoneEntity> phones, Set<AddressEntity> addresses) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -104,23 +105,22 @@ public class RegisterEntity {
 	public void setCpf(String cpf) {
 		if (Regex.digit(cpf, 11, 11, false))
 			errors.put("cpf", cpf);
-		/*
-		int[] verify = {0,0};
-		for (int i = 0; i < 9; i++) {
-			verify[1] += Character.getNumericValue(cpf.toCharArray()[i]) * (i + 1);
+		/* Comentado temporariamente enquanto não há validação correta no front
+		else {
+			char[] digits = cpf.toCharArray();
+			for (int d = 0; d < 2; d++) {
+				Integer digit = 0;
+				for (int i = 0; i < 9 + d; i++)
+					digit += Character.getNumericValue
+						(digits[i]) * ((10 + d) - i);
+				digit = (11 - (digit%11)) % 10;
+				digits[d+9] = digit.toString().charAt(0);
+			}
+			
+			if (new String(digits) != cpf)
+				errors.put("cpf", "inválido [" + new String(digits).substring(9) + "]");
 		}
-		
-		System.out.print(verify[1]);
-		System.out.print(verify[1]%11%10);
-		
-		verify[0] = verify[1]%11%10;
-		verify[1] += (verify[0]*10);
-		
-		System.out.print((verify[0]*10) + verify[1]%11%10);
-		
-		if (Integer.parseInt(cpf.substring(9)) != (verify[0]*10) + verify[1]%11%10)
-			errors.put("cpf", "CPF inválido : " + (verify[0]*10) + verify[1]%11%10);*/
-		
+		*/
 		this.cpf = cpf;
 	}
 
@@ -144,20 +144,22 @@ public class RegisterEntity {
 			errors.put("birthday", birthday.toString());
 		this.birthday = birthday;
 	}
+	
+	/* -- */
 
-	public List<PhoneEntity> getPhones() {
+	public Set<PhoneEntity> getPhones() {
 		return phones;
 	}
 
-	public void setPhones(List<PhoneEntity> phones) {
+	public void setPhones(Set<PhoneEntity> phones) {
 		this.phones = phones;
 	}
 
-	public List<AddressEntity> getAddresses() {
+	public Set<AddressEntity> getAddresses() {
 		return addresses;
 	}
 
-	public void setAddresses(List<AddressEntity> addresses) {
+	public void setAddresses(Set<AddressEntity> addresses) {
 		this.addresses = addresses;
 	}
 
@@ -169,5 +171,30 @@ public class RegisterEntity {
 		this.user = user;
 	}
 	
-    
+	/* -- */
+
+	public void addPhone(PhoneEntity phone) {
+		phone.setRegister(this);
+		phones.add(phone);
+	}
+
+	public void addAddress(AddressEntity address) {
+		address.setRegister(this);
+		addresses.add(address);
+	}
+
+	public void setPhonesDep(Set<PhoneEntity> phones) {
+		phones.forEach(phone -> phone.setRegister(this));
+		this.phones = phones;
+	}
+
+	public void setAddressesDep(Set<AddressEntity> addresses) {
+		addresses.forEach(address -> address.setRegister(this));
+		this.addresses = addresses;
+	}
+	
+	public void setUserDep(UserEntity user) {
+		user.setRegister(this);
+		this.user = user;
+	}
 }

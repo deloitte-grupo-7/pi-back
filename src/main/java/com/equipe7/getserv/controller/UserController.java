@@ -1,14 +1,16 @@
 package com.equipe7.getserv.controller;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.*;
 
 import com.equipe7.getserv.controller.form.PostForm;
-import com.equipe7.getserv.model.ProfileEntity;
+import com.equipe7.getserv.controller.form.ProfileForm;
 import com.equipe7.getserv.model.UserEntity;
 import com.equipe7.getserv.model.ServiceEntity;
 import com.equipe7.getserv.repository.RoleRepository;
@@ -26,43 +28,92 @@ public class UserController {
 	private UserRepository userRp;
 
 	@Autowired
-	private RoleRepository roleRp;
+	//private RoleRepository roleRp;
 	
 	
 	public UserController(UserService userSv, UserRepository userRp, RoleRepository roleRp) {
 		super();
 		this.userSv = userSv;
 		this.userRp = userRp;
-		this.roleRp = roleRp;
+		//this.roleRp = roleRp;
 	}
 
-	@GetMapping("/{username}")
-	public ResponseEntity<?> getUser(@PathVariable String username) {
+//	@GetMapping("/users")
+//	public ResponseEntity<?> getUsers() {
+//		UserEntity user = userSv.getUsers();
+//		if (user == null)
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+//		return ResponseEntity.status(HttpStatus.FOUND).body(user);
+//	}
+
+	@GetMapping({"/{username}", "/{username}/profile"})
+	public ResponseEntity<?> getProfile(@PathVariable String username) {
 		UserEntity user = userSv.getUser(username);
 		if (user == null)
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-		return ResponseEntity.status(HttpStatus.FOUND).body(user);
+			return ResponseEntity.notFound().build();
+		
+		ProfileForm profile = new ProfileForm(
+				user.getUsername(),
+				user.getRegister().getName(),
+				user.getProfile().getAbout(),
+				user.getProfile().getPictureURL(), 5);
+		
+		return ResponseEntity.ok().body(profile);
+	}
+
+	@GetMapping("/{username}/services")
+	public ResponseEntity<?> getServices(@PathVariable String username) {
+		UserEntity user = userSv.getUser(username);
+		if (user == null)
+			return ResponseEntity.badRequest().body("Usuário Inválido");
+		
+		Set<ServiceEntity> services = user.getProfile().getServices();
+		Set<PostForm> response = new HashSet<>();
+		services.forEach(service -> {
+			response.add(new PostForm(service));
+		});
+		return ResponseEntity.ok().body(response); 
 	}
 	
-	@PostMapping("/{username}")
+	@PostMapping("/{username}/services")
 	public ResponseEntity<?> postService(@RequestBody PostForm form, @PathVariable String username) {
 		UserEntity user = userSv.getUser(username);
 		if (user == null)
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário Inválido");
+			return ResponseEntity.badRequest().body("Usuário Inválido");
 		
-		ProfileEntity profile = new ProfileEntity();
-		user.setProfile(profile);
 		ServiceEntity service = new ServiceEntity();
 		
 		service.setTitle(form.getTitle());
 		service.setImageURL(form.getImgUrl());
 		service.setDescription(form.getDescription());
 		
-		profile.getServices().add(service);
-		profile.setUser(user);
+		user.getProfile().getServices().add(service);
+		service.setProfileDep(user.getProfile());
 		
 		userSv.saveUser(user);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(form);
+		form.setId(service.getId());
+		return ResponseEntity.created(null).body(form);
+	}
+	
+	@GetMapping("/{username}/services/{id}")
+	public ResponseEntity<?> getServiceById(@PathVariable Long id, @PathVariable String username) {
+		UserEntity user = userSv.getUser(username);
+		if (user == null)
+			return ResponseEntity.badRequest().body("Usuário Inválido");
+		
+		Set<ServiceEntity> services = user.getProfile().getServices();
+		ServiceEntity response = new ServiceEntity();
+		for (ServiceEntity service : services) {
+			if (service.getId() == id) {
+				response = service;
+				break;
+			}
+		}
+		
+		if (response.getId() != null)
+			return ResponseEntity.ok().body(new PostForm(response));
+		
+		return ResponseEntity.notFound().build(); 
 	}
 	
 	/*
@@ -74,11 +125,7 @@ public class UserController {
 		
 		return ResponseEntity.ok().body(userRp.save(updateTest(oldUser, user)));
 	}
-	*/
-	@GetMapping("/all/all")
-	public ResponseEntity<?> getAllUsers(){
-		return ResponseEntity.ok(userRp.findAll());
-	}
+	
 	/*
 	@GetMapping("/u/{id}")
 	public ResponseEntity<RegisterEntity> getByUsername(@PathVariable Long id){
@@ -130,7 +177,7 @@ public class UserController {
 	}*/
 
 	@DeleteMapping("/register/id/{id}")
-	public ResponseEntity delete(@PathVariable Long id){
+	public ResponseEntity<?> delete(@PathVariable Long id){
 		if(userRp.existsById(id)){
 			userRp.deleteById(id);
 			return ResponseEntity.ok().build();

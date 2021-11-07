@@ -1,8 +1,10 @@
 package com.equipe7.getserv.model;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,9 +18,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-//import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
@@ -38,17 +40,23 @@ public class ServiceEntity {
 	@Column(nullable = true)
     private String imageURL;
 	
+	/* -- */
+	
 	@ManyToMany(fetch = FetchType.EAGER)
-	private Collection<TagEntity> tags = new ArrayList<>();
-    
+	private Collection<TagEntity> tags = new HashSet<>();
+
+	@JsonIgnoreProperties("service")
 	@OneToMany(mappedBy = "service", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	@JsonIgnoreProperties("service_id")
-    private List<RateEntity> rates = new ArrayList<>();
+    private Set<RateEntity> rates = new HashSet<>();
     
     @ManyToOne
 	@JsonIgnore
 	@JoinColumn(name = "profile_id")
-    private ProfileEntity profile; 
+    private ProfileEntity profile;
+    
+	@Transient
+	@JsonIgnore
+	public Map<String, String> errors = new HashMap<>();
 
     public ServiceEntity(){
     	
@@ -85,12 +93,14 @@ public class ServiceEntity {
 	public void setImageURL(String imageURL) {
 		this.imageURL = imageURL;
 	}
+	
+	/* -- */
 
-	public List<RateEntity> getRates() {
+	public Set<RateEntity> getRates() {
 		return rates;
 	}
 
-	public void setRates(List<RateEntity> rates) {
+	public void setRates(Set<RateEntity> rates) {
 		this.rates = rates;
 	}
 
@@ -101,5 +111,29 @@ public class ServiceEntity {
 	public void setProfile(ProfileEntity profile) {
 		this.profile = profile;
 	}
+
+	public Collection<TagEntity> getTags() {
+		return tags;
+	}
+
+	public void setTags(Collection<TagEntity> tags) {
+		this.tags = tags;
+	}
     
+	/* -- */
+
+	public void addRate(RateEntity rate) {
+		rate.setService(this);
+		rates.add(rate);
+	}
+
+	public void setRatesDep(Set<RateEntity> rates) {
+		rates.forEach(rate -> rate.setService(this));
+		this.rates = rates;
+	}
+
+	public void setProfileDep(ProfileEntity profile) {
+		profile.getServices().add(this);
+		this.profile = profile;
+	}
 }

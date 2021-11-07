@@ -25,11 +25,6 @@ public class AddressEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@ManyToOne
-	@JoinColumn(name = "register_id")
-	@JsonIgnoreProperties({"addresses", "phones", "user"})
-    private RegisterEntity register;
-	
 	@Column(nullable = false,
 			length = 255)
 	private String rua;
@@ -56,6 +51,13 @@ public class AddressEntity {
 	@Column(nullable = true,
 			length = 512)
 	private String complemento;
+	
+	/* -- */
+	
+	@ManyToOne
+	@JoinColumn(name = "register_id")
+	@JsonIgnoreProperties({"addresses", "phones", "user"})
+    private RegisterEntity register;
 	
 	@JsonIgnore
 	@Transient
@@ -141,12 +143,21 @@ public class AddressEntity {
 			errors.put("complemento", complemento);
 		this.complemento = complemento.toUpperCase();
 	}
+	
+	/* -- */
 
 	public RegisterEntity getRegister() {
 		return register;
 	}
 
 	public void setRegister(RegisterEntity register) {
+		this.register = register;
+	}
+	
+	/* -- */
+
+	public void setRegisterDep(RegisterEntity register) {
+		register.getAddresses().add(this);
 		this.register = register;
 	}
 	
