@@ -35,6 +35,9 @@ public class ProfileEntity {
 	
 	@Column(length = 4096)
 	private String about;
+	
+	@Column(length = 64)
+	private String tagline;
 
 	/* -- */
 	
@@ -89,6 +92,16 @@ public class ProfileEntity {
 	}
 	
 	/* -- */
+
+	public String getTagline() {
+		return tagline;
+	}
+
+	public void setTagline(String tagline) {
+		if (Regex.any(tagline, 0, 64, false))
+			errors.put("tagline", "Limite alcançado");
+		this.tagline = tagline;
+	}
 
 	public UserEntity getUser() {
 		return user;
