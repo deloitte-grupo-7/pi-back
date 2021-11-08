@@ -32,11 +32,11 @@ public class SecurityBasicConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().cors().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		http.authorizeRequests().antMatchers("/signup/**", "/signin/**", "/token/refresh/**").permitAll();
+		http.authorizeRequests().antMatchers("/signup/**", "/signin/**", "/token-refresh/**").permitAll();
 		http.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN");
 		//http.authorizeRequests().antMatchers("GET", "**/settings/**").authenticated();
 		//http.authorizeRequests().antMatchers("GET", "/**").permitAll();
-		http.authorizeRequests().anyRequest().authenticated();
+		http.authorizeRequests().anyRequest().permitAll();
 		http.addFilter(new UserAuthenticationFilter(authenticationManagerBean()));
 		http.addFilterBefore(new UserAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
