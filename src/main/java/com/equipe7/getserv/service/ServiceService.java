@@ -29,5 +29,9 @@ public class ServiceService {
 	public ServiceEntity getService(Long id) {
 		return repository.getById(id);
 	}
+	
+	public void delService(Long id) {
+		repository.deleteById(id);
+	}
 
 }
