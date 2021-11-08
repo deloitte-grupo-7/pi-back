@@ -15,6 +15,7 @@ import com.equipe7.getserv.model.UserEntity;
 import com.equipe7.getserv.model.ServiceEntity;
 import com.equipe7.getserv.repository.RoleRepository;
 import com.equipe7.getserv.repository.UserRepository;
+import com.equipe7.getserv.service.ServiceService;
 import com.equipe7.getserv.service.UserService;
 
 
@@ -28,7 +29,10 @@ public class UserController {
 	private UserRepository userRp;
 
 	@Autowired
-	//private RoleRepository roleRp;
+	private RoleRepository roleRp;
+	
+	@Autowired
+	private ServiceService serviceSv;
 	
 	
 	public UserController(UserService userSv, UserRepository userRp, RoleRepository roleRp) {
@@ -55,6 +59,7 @@ public class UserController {
 		return ResponseEntity.ok().body(new ProfileForm(user));
 	}
 
+	/* ok */
 	@GetMapping("/{username}/services")
 	public ResponseEntity<?> getServices(@PathVariable String username) {
 		UserEntity user = userSv.getUser(username);
@@ -68,27 +73,8 @@ public class UserController {
 		});
 		return ResponseEntity.ok().body(response); 
 	}
-	
-	@PostMapping("/{username}/services")
-	public ResponseEntity<?> postService(@RequestBody PostForm form, @PathVariable String username) {
-		UserEntity user = userSv.getUser(username);
-		if (user == null)
-			return ResponseEntity.badRequest().body("Usuário Inválido");
-		
-		ServiceEntity service = new ServiceEntity();
-		
-		service.setTitle(form.getTitle());
-		service.setImageURL(form.getImgUrl());
-		service.setDescription(form.getDescription());
-		
-		user.getProfile().getServices().add(service);
-		service.setProfileDep(user.getProfile());
-		
-		userSv.saveUser(user);
-		form.setId(service.getId());
-		return ResponseEntity.created(null).body(form);
-	}
-	
+
+	/* ok */
 	@GetMapping("/{username}/services/{id}")
 	public ResponseEntity<?> getServiceById(@PathVariable Long id, @PathVariable String username) {
 		UserEntity user = userSv.getUser(username);
@@ -106,6 +92,49 @@ public class UserController {
 		
 		if (response.getId() != null)
 			return ResponseEntity.ok().body(new PostForm(response));
+		
+		return ResponseEntity.notFound().build(); 
+	}
+	
+	/* ok */
+	@PostMapping("/{username}/services")
+	public ResponseEntity<?> postService(@RequestBody PostForm form, @PathVariable String username) {
+		UserEntity user = userSv.getUser(username);
+		if (user == null)
+			return ResponseEntity.badRequest().body("Usuário Inválido");
+		
+		ServiceEntity service = new ServiceEntity();
+		
+		service.setTitle(form.getTitle());
+		service.setImageURL(form.getImgUrl());
+		service.setDescription(form.getDescription());
+		
+		user.getProfile().getServices().add(service);
+		service.setProfileDep(user.getProfile());
+		
+		userSv.saveUser(user);
+		
+		form.setId(0L);
+		userSv.getUser(username).getProfile().getServices()
+			.forEach(serv -> {
+				if (serv.getId() > form.getId())
+					form.setId(serv.getId());
+			});
+		return ResponseEntity.created(null).body(form);
+	}
+	
+	@DeleteMapping("/{username}/services/{id}")
+	public ResponseEntity<?> delete(@PathVariable String username, @PathVariable Long id){
+		UserEntity user = userSv.getUser(username);
+		if (user == null)
+			return ResponseEntity.badRequest().body("Usuário Inválido");
+		
+		for (ServiceEntity service : user.getProfile().getServices())
+			if (service.getId() == id) {
+				service.getProfile().getServices().remove(service);
+				serviceSv.delService(id);
+				return ResponseEntity.ok("Deleted");
+			}
 		
 		return ResponseEntity.notFound().build(); 
 	}

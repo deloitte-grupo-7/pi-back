@@ -13,22 +13,22 @@ import com.equipe7.getserv.resource.Table;
 
 @RestController
 @RequestMapping("/api")
-public abstract class ApiController {
+public class ApiController {
 
 //	@Autowired
 //	private UserService userServ;
 	
 	@Autowired
-	private static UserRepository userRepo;
+	private UserRepository userRepo;
 
 	@GetMapping("/check/usernames")
-	public static ResponseEntity<Boolean> usernameResponse(@RequestParam String username){
+	public ResponseEntity<Boolean> usernameResponse(@RequestParam String username){
 		if (Table.getUsernames().size() == 0)
 			Table.reset(userRepo);
 		return ResponseEntity.ok(Table.getUsername(username));
 	}
 	
-	public static Boolean usernameExisting(@RequestParam String username){
+	public Boolean usernameExisting(@RequestParam String username){
 		if (Table.getUsernames().size() == 0)
 			Table.reset(userRepo);
 		return Table.getUsername(username);
