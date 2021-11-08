@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,10 +15,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.equipe7.getserv.controller.form.PostForm;
 import com.equipe7.getserv.controller.form.ProviderForm;
 import com.equipe7.getserv.controller.form.SignInForm;
 import com.equipe7.getserv.controller.form.SignUpForm;
@@ -28,6 +25,7 @@ import com.equipe7.getserv.model.RegisterEntity;
 import com.equipe7.getserv.model.UserEntity;
 import com.equipe7.getserv.repository.RoleRepository;
 import com.equipe7.getserv.repository.UserRepository;
+import com.equipe7.getserv.resource.CustomEncrypt;
 import com.equipe7.getserv.resource.Table;
 import com.equipe7.getserv.resource.Token;
 import com.equipe7.getserv.service.UserService;
@@ -81,6 +79,7 @@ public class MainController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado");
 		
 		userService.encodePassword(user);
+		user.getRegister().setCpf(CustomEncrypt.encrypt(form.getCpf()));
 		Table.addUsername(user.getUsername());
 		return ResponseEntity.created(null).body(userService.saveUser(user));
 	}

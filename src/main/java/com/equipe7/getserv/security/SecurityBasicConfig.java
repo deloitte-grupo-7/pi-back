@@ -34,7 +34,9 @@ public class SecurityBasicConfig extends WebSecurityConfigurerAdapter{
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.authorizeRequests().antMatchers("/signup/**", "/signin/**", "/token/refresh/**").permitAll();
 		http.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN");
-		http.authorizeRequests().anyRequest().permitAll();
+		//http.authorizeRequests().antMatchers("GET", "**/settings/**").authenticated();
+		//http.authorizeRequests().antMatchers("GET", "/**").permitAll();
+		http.authorizeRequests().anyRequest().authenticated();
 		http.addFilter(new UserAuthenticationFilter(authenticationManagerBean()));
 		http.addFilterBefore(new UserAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
