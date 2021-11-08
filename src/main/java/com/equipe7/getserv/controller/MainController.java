@@ -37,14 +37,15 @@ import com.equipe7.getserv.service.UserService;
 public class MainController {
 	
 	@Autowired
-	private UserService userServ;
+	private UserService userService;
 
 	@Autowired
-	private RoleRepository repository;
+	private RoleRepository roleRepository;
 	
 	@Autowired
 	private UserRepository userRepository;
 	
+	/* ok */
 	@PostMapping("/signup")
 	public ResponseEntity<?> signUp(@RequestBody SignUpForm form){
 		UserEntity user = new UserEntity();
@@ -54,7 +55,7 @@ public class MainController {
 		if (user.errors.size() > 0)
 			return ResponseEntity.badRequest().body(user.errors);
 		
-		user.getRoles().add(repository.findByName("ROLE_USER"));
+		user.getRoles().add(roleRepository.findByName("ROLE_USER"));
 		
 		RegisterEntity register = new RegisterEntity();
 		
@@ -79,14 +80,15 @@ public class MainController {
 		if (Table.getCpf(register.getCpf()))
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado");
 		
-		userServ.encodePassword(user);
+		userService.encodePassword(user);
 		Table.addUsername(user.getUsername());
-		return ResponseEntity.created(null).body(userServ.saveUser(user));
+		return ResponseEntity.created(null).body(userService.saveUser(user));
 	}
 	
+	/* ok */
 	@PostMapping("/signin")
 	public ResponseEntity<Map<String, String>> signIn(@RequestBody SignInForm form) {
-		UserEntity user = userServ.getUser(form.getUsername().toLowerCase());
+		UserEntity user = userService.getUser(form.getUsername().toLowerCase());
 		Map<String, String> response = new HashMap<>();
 		
 		if (user == null) {
@@ -94,7 +96,7 @@ public class MainController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
 		}
 		
-		if (!userServ.matches(form.getPassword(), user)) {
+		if (!userService.matches(form.getPassword(), user)) {
 			response.put("error", "Senha inválida");
 			return ResponseEntity.badRequest().body(response);
 		}
@@ -106,27 +108,20 @@ public class MainController {
 		return ResponseEntity.accepted().body(response);
 	}
 	
+	/* ok */	
 	@GetMapping("/token-refresh")
-	public ResponseEntity<Map<String, String>> refresh(HttpServletRequest request, HttpServletResponse response) {
+	public ResponseEntity<Map<String, String>> refresh(HttpServletRequest request) {
 		String auth0 = request.getHeader(HttpHeaders.AUTHORIZATION);
-		if (auth0 != null && auth0.startsWith(Token.START)) {
-			String username = Token.decodedJWT(auth0).getSubject();
-			UserEntity user = userServ.getUser(username);
-			
-			Map<String, String> tokens = Token.createTokens(user);
-			response.setHeader(HttpHeaders.AUTHORIZATION, tokens.get("access_token"));
-			
-			return ResponseEntity.ok(tokens);
-		} else {
-			Map<String, String> error = new HashMap<>();
-			error.put("error", "Refresh token is missing");
-			return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error); 
-		}
+		Map<String, String> map = Token.refresh(auth0, userService);
+		if (map.size() > 1)
+			return ResponseEntity.ok(map);
+		return ResponseEntity.badRequest().body(map);
 	}
 	
+	/* ok */
 	@GetMapping("/providers")
 	public ResponseEntity<List<ProviderForm>> getProvaders() {
-		List<UserEntity> users = userServ.getUsers();
+		List<UserEntity> users = userService.getUsers();
 		List<ProviderForm> providers = new ArrayList<>();
 		users.forEach(user -> {
 			if (user.getProfile().getServices().size() > 0) {

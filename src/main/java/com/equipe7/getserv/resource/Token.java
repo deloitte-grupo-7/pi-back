@@ -16,6 +16,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.equipe7.getserv.model.RoleEntity;
 import com.equipe7.getserv.model.UserEntity;
+import com.equipe7.getserv.service.UserService;
 
 public abstract class Token {
 
@@ -72,6 +73,18 @@ public abstract class Token {
 	public static DecodedJWT decodedJWT(String bearer) {
 		JWTVerifier varifier = JWT.require(ALGORITHM).build();
 		return varifier.verify(bearer.substring(START.length()));
+	}
+	
+	public static Map<String, String> refresh(String refresh, UserService userService){
+		if (refresh != null && refresh.startsWith(Token.START)) {
+			String username = Token.decodedJWT(refresh).getSubject();
+			UserEntity user = userService.getUser(username);
+			
+			return Token.createTokens(user);
+		}
+		Map<String, String> error = new HashMap<>();
+		error.put("error", "Refresh token is missing");
+		return error;
 	}
 	
 }
