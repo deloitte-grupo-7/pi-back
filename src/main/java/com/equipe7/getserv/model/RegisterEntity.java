@@ -105,7 +105,7 @@ public class RegisterEntity {
 	public void setCpf(String cpf) {
 		if (Regex.digit(cpf, 11, 11, false))
 			errors.put("cpf", cpf);
-		/*else {
+		else {
 			char[] digits = cpf.toCharArray();
 			for (int d = 0; d < 2; d++) {
 				Integer digit = 0;
@@ -116,9 +116,9 @@ public class RegisterEntity {
 				digits[d+9] = digit.toString().charAt(0);
 			}
 			
-			if (new String(digits).subSequence(0, 11) != cpf)
+			if (!cpf.equals(new String(digits)))
 				errors.put("cpf", "inválido [" + new String(digits).substring(9) + "]");
-		}*/
+		}
 		
 		this.cpf = cpf;
 	}

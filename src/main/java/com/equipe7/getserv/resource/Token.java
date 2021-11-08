@@ -87,4 +87,11 @@ public abstract class Token {
 		return error;
 	}
 	
+	public static boolean userAuth(String username, String token){
+		if (token != null && token.startsWith(Token.START))
+			if (username.equals(Token.decodedJWT(token).getSubject()))
+				return true;
+		return false;
+	}
+	
 }
