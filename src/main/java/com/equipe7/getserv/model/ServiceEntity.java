@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.equipe7.getserv.controller.form.PostForm;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -135,5 +136,12 @@ public class ServiceEntity {
 	public void setProfileDep(ProfileEntity profile) {
 		profile.getServices().add(this);
 		this.profile = profile;
+	}
+	
+	public void update(PostForm form) {
+		setDescription(form.getDescription());
+		setImageURL(form.getImgUrl());
+		setTitle(form.getTitle());
+		form.setId(getId());
 	}
 }

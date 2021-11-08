@@ -23,8 +23,8 @@ public abstract class Token {
 	public static final String START = "Bearer ";
 	public static final Algorithm ALGORITHM = Algorithm.HMAC256(Token.KEY.getBytes());
 	
-	public static final long EXP_ACCESS = 90l * 60000l;
-	public static final long EXP_REFRESH = 30l * (1440l * 60000l);
+	public static final long EXP_ACCESS = 1440l * 60000l;
+	public static final long EXP_REFRESH = 90l * (1440l * 60000l);
 	
 	public static Map<String, String> createTokensUser(User user){
 		String access_token = START + JWT.create()
