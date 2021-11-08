@@ -57,6 +57,19 @@ public abstract class Table {
 			usernames.remove(email);
 	}
 	
+	public static boolean getCpf(String cpf) {
+		return false; //encodedCPFs.contains(cpf);
+	}
+	
+	public static void addCpf(String cpf) {
+		//encodedCPFs.add(cpf);
+	}
+	
+	public static void removeCpf(String cpf) {
+		//if (getCpf(cpf))
+		//	encodedCPFs.remove(cpf);
+	}
+	
 	public static void reset(UserRepository repository) {
 		emails.clear();
 		usernames.clear();
@@ -69,5 +82,10 @@ public abstract class Table {
 			if (user.getRegister().getCpf() != null)
 				encodedCPFs.add(user.getRegister().getCpf());
 		});
+	}
+	
+	public static void check(UserRepository repository) {
+		if (getUsernames().size() == 0)
+			reset(repository);
 	}
 }

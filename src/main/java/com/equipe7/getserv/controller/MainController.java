@@ -45,13 +45,6 @@ public class MainController {
 	@Autowired
 	private UserRepository userRepository;
 	
-//	@GetMapping("/api/get/usernames")
-//	public ResponseEntity<Boolean> usernameExisting(@RequestParam String username){
-//		if (Table.getUsernames().size() == 0)
-//			Table.reset(userRepository);
-//		return ResponseEntity.ok(Table.getUsername(username));
-//	}
-	
 	@PostMapping("/signup")
 	public ResponseEntity<?> signUp(@RequestBody SignUpForm form){
 		UserEntity user = new UserEntity();
@@ -83,8 +76,8 @@ public class MainController {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Usuário já cadastrado");
 		if (Table.getEmail(register.getEmail()))
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Email já cadastrado");
-//		if (Table.getEncodedCPF(register.getCpf()))
-//			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado");
+		if (Table.getCpf(register.getCpf()))
+			return ResponseEntity.status(HttpStatus.CONFLICT).body("CPF já cadastrado");
 		
 		userServ.encodePassword(user);
 		Table.addUsername(user.getUsername());
