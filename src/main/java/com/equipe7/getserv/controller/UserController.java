@@ -16,6 +16,7 @@ import com.equipe7.getserv.model.UserEntity;
 import com.equipe7.getserv.model.ServiceEntity;
 import com.equipe7.getserv.repository.RoleRepository;
 import com.equipe7.getserv.repository.UserRepository;
+import com.equipe7.getserv.resource.Table;
 import com.equipe7.getserv.service.ServiceService;
 import com.equipe7.getserv.service.UserService;
 
@@ -60,12 +61,32 @@ public class UserController {
 		return ResponseEntity.ok().body(new ProfileForm(user));
 	}
 
+	/* ok */
 	@GetMapping({"/{username}/settings"})
-	public ResponseEntity<?> getEdit(@PathVariable String username) {
+	public ResponseEntity<?> getSettings(@PathVariable String username) {
 		UserEntity user = userSv.getUser(username);
 		if (user == null)
 			return ResponseEntity.notFound().build();
 		return ResponseEntity.ok().body(new AccountForm(user));
+	}
+
+	@PutMapping({"/{username}/settings"})
+	public ResponseEntity<?> getEdit(@PathVariable String username, @RequestBody AccountForm account) {
+		UserEntity user = userSv.getUser(username);
+		if (user == null)
+			return ResponseEntity.notFound().build();
+		
+		account.updateUser(user);
+		if (user.errors.size() > 0) {
+			user.errors.clear();
+			return ResponseEntity.badRequest().build();
+		}
+		
+		userSv.encodePassword(user);
+		Table.addUsername(user.getUsername());
+		account.setPassword(user.getPassword());
+		userSv.saveUser(user);
+		return ResponseEntity.ok().body(account);
 	}
 
 	/* ok */

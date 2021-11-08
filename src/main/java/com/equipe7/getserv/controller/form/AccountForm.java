@@ -31,6 +31,14 @@ public class AccountForm {
 		setPassword("************");
 	}
 	
+	public void updateUser(UserEntity user) {
+		user.setUsername(username);
+		user.getProfile().setAbout(description);
+		user.getRegister().setEmail(email);
+		user.getRegister().setName(name);
+		user.setPassword(password);
+	}
+	
 	
 	public String getName() {
 		return name;
