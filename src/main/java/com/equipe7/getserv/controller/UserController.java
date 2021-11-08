@@ -123,8 +123,9 @@ public class UserController {
 		return ResponseEntity.created(null).body(form);
 	}
 	
+	/* ok */
 	@DeleteMapping("/{username}/services/{id}")
-	public ResponseEntity<?> delete(@PathVariable String username, @PathVariable Long id){
+	public ResponseEntity<?> deleteService(@PathVariable String username, @PathVariable Long id){
 		UserEntity user = userSv.getUser(username);
 		if (user == null)
 			return ResponseEntity.badRequest().body("Usuário Inválido");
@@ -137,6 +138,29 @@ public class UserController {
 			}
 		
 		return ResponseEntity.notFound().build(); 
+	}
+	
+	/* ok */
+	@PutMapping("/{username}/services/{id}")
+	public ResponseEntity<?> editService(@PathVariable String username, @PathVariable Long id, @RequestBody PostForm form){
+		UserEntity user = userSv.getUser(username);
+		if (user == null)
+			return ResponseEntity.badRequest().body("Usuário Inválido");
+		
+		ServiceEntity service = new ServiceEntity();
+		for (ServiceEntity serv : user.getProfile().getServices()) {
+			if (serv.getId() == id) {
+				service = serviceSv.getService(id);
+				break;
+			}
+		}
+		
+		if (service.getId() == null)
+			return ResponseEntity.notFound().build(); 
+		
+		service.update(form);
+		serviceSv.saveService(service);
+		return ResponseEntity.ok(form); 
 	}
 	
 	/*
