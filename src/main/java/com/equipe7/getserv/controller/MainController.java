@@ -86,7 +86,7 @@ public class MainController {
 	
 	@PostMapping("/signin")
 	public ResponseEntity<Map<String, String>> signIn(@RequestBody SignInForm form) {
-		UserEntity user = userServ.getUser(form.getUsername());
+		UserEntity user = userServ.getUser(form.getUsername().toLowerCase());
 		Map<String, String> response = new HashMap<>();
 		
 		if (user == null) {
